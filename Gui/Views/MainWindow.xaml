@@ -1,0 +1,41 @@
+﻿<catel:DataWindow x:Class="Gui.Views.MainWindow"
+                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+				  xmlns:catel="http://catel.codeplex.com"
+                  xmlns:converters="clr-namespace:Catel.Windows.Data.Converters;assembly=Catel.Extensions.Controls"
+                  xmlns:views="clr-namespace:SKnoxConsulting.SafeAndSound.Gui.Views"
+                  ShowInTaskbar="True" ResizeMode="CanResize" SizeToContent="Manual" WindowStartupLocation="Manual" WindowState="Maximized" Background="{StaticResource MidBlueGradientBrush}" Padding="0">
+    
+    <!-- Resources -->
+    <catel:DataWindow.Resources>
+    </catel:DataWindow.Resources>
+    
+    <!-- Content -->
+    <catel:StackGrid>
+        <catel:StackGrid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </catel:StackGrid.RowDefinitions>
+        <catel:StackGrid.ColumnDefinitions>
+            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="*" />
+        </catel:StackGrid.ColumnDefinitions>
+
+        <ListBox ItemsSource="{Binding BackupSets}" SelectedItem="{Binding SelectedBackupSet}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock DataContext="{Binding}" Text="{Binding Name}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <views:BackupSetView DataContext="{Binding www.}" Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, 
+Path=IsBackupSelected, Converter={StaticResource BoolToCollapsingVisibilityConverter}}"/>
+
+        <StackPanel>
+            <Button Command="{Binding AddBackupSet}" Content="Add Backup Set" />
+            <Button Command="{Binding EditBackupSet}" Content="Edit Backup Set" />
+            <Button Command="{Binding RemoveBackupSet}" Content="Remove Backup Set" />
+        </StackPanel>
+    </catel:StackGrid>
+</catel:DataWindow>
