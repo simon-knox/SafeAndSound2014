@@ -3,7 +3,7 @@ Catel project template readme
 
 Congratulations with creating a new Catel project:
 
-Gui
+Gui 
 
 To get this project up and running, perform the following actions:
 
@@ -14,3 +14,5 @@ To get this project up and running, perform the following actions:
 
 
 For more information and support, visit http://www.catelproject.com
+
+Test
