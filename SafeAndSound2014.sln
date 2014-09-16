@@ -9,6 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackupEngineTests", "Backup
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gui", "Gui\Gui.csproj", "{309C7F02-5702-404A-8055-7616830513AD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{504551A7-0BCD-40B6-8CEF-8D754B7ED896}"
+	ProjectSection(SolutionItems) = preProject
+		SafeAndSound.build = SafeAndSound.build
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
