@@ -58,9 +58,9 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="CopyFileActionTests.cs" />
     <Compile Include="BackupSetTests.cs" />
+    <Compile Include="CopyFileActionTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BackupEngine\BackupEngine.csproj">
