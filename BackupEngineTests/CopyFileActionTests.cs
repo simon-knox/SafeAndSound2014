@@ -1,16 +1,16 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SKnoxConsulting.SafeAndSound.BackupEngine.BackupActions;
 using SKnoxConsulting.SafeAndSound.BackupEngine;
 using System.Threading;
+using NUnit.Framework;
 //using SKnoxConsulting.SafeAndSound.BackupEngine.BackupActions;
 
 namespace SKnoxConsulting.SafeAndSound.BackupEngineTests
 {
-    [TestClass]
+    [TestFixture]
     public class CopyFileActionTests
     {
-        [TestMethod]
+        [Test]
         public void CanCreateCopyFileAction()
         {
             var copyFileAction = new CopyFileAction("MySource", "MyDestination");

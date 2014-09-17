@@ -1,14 +1,14 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using SKnoxConsulting.SafeAndSound.BackupEngine;
 using System.Threading;
 
 namespace SKnoxConsulting.SafeAndSound.BackupEngineTests
 {
-    [TestClass]
+    [TestFixture]
     public class BackupSetTests
     {
-        [TestMethod]
+        [Test]
         [Ignore]
         public void RunBackupTest()
         {
