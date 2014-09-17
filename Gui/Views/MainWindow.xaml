@@ -29,8 +29,8 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <views:BackupSetView DataContext="{Binding www.}" Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, 
-Path=IsBackupSelected, Converter={StaticResource BoolToCollapsingVisibilityConverter}}"/>
+        <views:BackupSetView DataContext="{Binding SelectedBackupSet}" Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type catel:StackGrid}}, 
+Path=DataContext.IsBackupSetSelected, Converter={StaticResource BoolToCollapsingVisibilityConverter}}"/>
 
         <StackPanel>
             <Button Command="{Binding AddBackupSet}" Content="Add Backup Set" />

@@ -8,7 +8,7 @@
     </UserControl.Resources>
 
     <!-- Content -->
-    <catel:StackGrid>
+    <catel:StackGrid Background="White" Margin="7">
         <catel:StackGrid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
