@@ -307,7 +307,11 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
         public BackupProcessingStatus ProcessingStatus
         {
             get { return GetValue<BackupProcessingStatus>(ProcessingStatusProperty); }
-            set { SetValue(ProcessingStatusProperty, value); }
+            set 
+            { 
+                SetValue(ProcessingStatusProperty, value);
+                RaisePropertyChanged(() => Status);
+            }
         }
 
         public static readonly PropertyData StatusProperty = RegisterProperty("Status", typeof(string), STATUS_READY);
@@ -330,6 +334,8 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
                         return STATUS_COUNTING_FILES;
                     case BackupProcessingStatus.SkippingFiles:
                         return STATUS_SKIPPING_FILES;
+                    case BackupProcessingStatus.Cancelled:
+                        return STATUS_CANCELLED;
                     case BackupProcessingStatus.FinishedProcessingActionQueue:
                     case BackupProcessingStatus.Finished:
                         return STATUS_FINISHED;
@@ -340,6 +346,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
             private set
             {
                 SetValue(StatusProperty, value);
+                RaisePropertyChanged(() => ProcessingStatus);
             }
         }
 
@@ -350,7 +357,11 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
         public int TotalFileCount
         {
             get { return GetValue<int>(TotalFileCountProperty); }
-            private set { SetValue(TotalFileCountProperty, value); }
+            private set
+            {
+                SetValue(TotalFileCountProperty, value);
+                RaisePropertyChanged(() => TotalFileCountMaximum);
+            }
         }
 
         /// <summary>
@@ -388,7 +399,11 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
         public int FileCopyCount
         {
             get { return GetValue<int>(FileCopyCountProperty); }
-            private set { SetValue(FileCopyCountProperty, value); }
+            private set
+            {
+                SetValue(FileCopyCountProperty, value);
+                RaisePropertyChanged(() => ProcessingProgressCount);
+            }
         }
 
         public static readonly PropertyData FolderCreateCountProperty = RegisterProperty("FolderCreateCount", typeof(int), 0);
@@ -408,7 +423,11 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
         public int FileOverwriteCount
         {
             get { return GetValue<int>(FileOverwriteCountProperty); }
-            private set { SetValue(FileOverwriteCountProperty, value); }
+            private set 
+            {
+                SetValue(FileOverwriteCountProperty, value);
+                RaisePropertyChanged(() => ProcessingProgressCount);
+            }
         }
 
         public static readonly PropertyData FileSkipCountProperty = RegisterProperty("FileSkipCount", typeof(int), 0);
@@ -418,7 +437,11 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
         public int FileSkipCount
         {
             get { return GetValue<int>(FileSkipCountProperty); }
-            private set { SetValue(FileSkipCountProperty, value); }
+            private set 
+            { 
+                SetValue(FileSkipCountProperty, value);
+                RaisePropertyChanged(() => ProcessingProgressCount);            
+            }
         }
 
         public static readonly PropertyData ErrorCountProperty = RegisterProperty("ErrorCount", typeof(int), 0);
@@ -428,9 +451,14 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
         public int ErrorCount
         {
             get { return GetValue<int>(ErrorCountProperty); }
-            private set { SetValue(ErrorCountProperty, value); }
+            private set
+            {
+                SetValue(ErrorCountProperty, value);
+                RaisePropertyChanged(() => ProcessingProgressCount);
+            }
         }
 
+        public static readonly PropertyData ProcessingProgressCountProperty = RegisterProperty("ProcessingProgressCount", typeof(int), 0);      
         /// <summary>
         /// The number of BackupActions that have been processed
         /// </summary>
@@ -547,23 +575,23 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
 
         #region public methods
 
-        /// <summary>
-        /// Serialization function
-        /// </summary>
-        /// <param name="info">The SerializationInfo</param>
-        /// <param name="context">The SerializationContext</param>
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("Name", Name);
-            info.AddValue("SourceDirectory", SourceDirectory);
-            info.AddValue("DestinationDirectory", DestinationDirectory);
-            info.AddValue("ExcludedDirectories", ExcludedDirectories);
-            info.AddValue("IncludeReadOnly", IncludeReadOnly);
-            info.AddValue("IncludeHidden", IncludeHidden);
-            info.AddValue("IncludeSystem", IncludeSystem);
-            info.AddValue("RemoveDeleted", RemoveDeleted);
-            //info.AddValue("Schedule", Schedule);
-        }
+        ///// <summary>
+        ///// Serialization function
+        ///// </summary>
+        ///// <param name="info">The SerializationInfo</param>
+        ///// <param name="context">The SerializationContext</param>
+        //public void GetObjectData(SerializationInfo info, StreamingContext context)
+        //{
+        //    info.AddValue("Name", Name);
+        //    info.AddValue("SourceDirectory", SourceDirectory);
+        //    info.AddValue("DestinationDirectory", DestinationDirectory);
+        //    info.AddValue("ExcludedDirectories", ExcludedDirectories);
+        //    info.AddValue("IncludeReadOnly", IncludeReadOnly);
+        //    info.AddValue("IncludeHidden", IncludeHidden);
+        //    info.AddValue("IncludeSystem", IncludeSystem);
+        //    info.AddValue("RemoveDeleted", RemoveDeleted);
+        //    //info.AddValue("Schedule", Schedule);
+        //}
 
         /// <summary>
         /// Returns the BackupSet Name
@@ -619,8 +647,14 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
                 })
                 .ContinueWith((t) =>
                 {
-                    ProcessingStatus = BackupProcessingStatus.Finished;
+                    ProcessingStatus = _cancelToken.IsCancellationRequested ? BackupProcessingStatus.Cancelled :
+                        BackupProcessingStatus.Finished;
                 });
+        }
+
+        public void CancelBackup()
+        {
+            _cancelToken.Cancel();
         }
 
         #endregion public methods
@@ -654,6 +688,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
 
             if (_cancelToken.IsCancellationRequested)
             {
+                ProcessingStatus = BackupProcessingStatus.Cancelled;
                 return;
             }
 
@@ -670,6 +705,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
                         {
                             if (_cancelToken.IsCancellationRequested)
                             {
+                                ProcessingStatus = BackupProcessingStatus.Cancelled;
                                 return;
                             }
                             ProcessDestinationDirectoryForPossibleDelete(di);
@@ -687,6 +723,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
                         {
                             if (_cancelToken.IsCancellationRequested)
                             {
+                                ProcessingStatus = BackupProcessingStatus.Cancelled;
                                 return;
                             }
                             ProcessDirectoryForActions(di);
@@ -699,6 +736,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
                     }
                 }
             }
+            ProcessingStatus = BackupProcessingStatus.ActionQueueBuilt;
         }
 
         private void ProcessDirectoryForActions(DirectoryInfo di)
@@ -878,6 +916,9 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
                 }
                 FileSkipCount = SkipFileActionQueue.Count;
             }
+
+           // Status = "TEST!!!";
+           ProcessingStatus = BackupProcessingStatus.FinishedCountingFiles;
 
             foreach (BackupAction act in ActionQueue)
             {

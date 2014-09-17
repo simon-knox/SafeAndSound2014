@@ -11,12 +11,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Markup;
 
 namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
 {
     public class BackupSetViewModel : ViewModelBase
     {
         private IUIVisualizerService _uiVisualizerService;
+        private ChangeNotificationWrapper _totalFileCountChanged;
 
         public BackupSetViewModel(BackupSet backupSet, IUIVisualizerService uiVisualizerService)
         {
@@ -27,8 +29,14 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
 
             BrowseSourceCommand = new Command(() => SourceDirectory = SetDirectory(SourceDirectory, "Select Source Directory"));
             BrowseDestinationCommand = new Command(() => DestinationDirectory = SetDirectory(DestinationDirectory, "Select Destination Directory"));
-
             ExcludeDirectoriesCommand = new Command(OnExcludeDirectoriesExecute, ()=>!String.IsNullOrEmpty(SourceDirectory));
+            RunBackupCommand = new Command(() => BackupSet.RunBackup(), () =>   ProcessingStatus == BackupProcessingStatus.NotStarted ||
+                                                                                ProcessingStatus == BackupProcessingStatus.Cancelled ||
+                                                                                ProcessingStatus == BackupProcessingStatus.Finished);
+            CancelBackupCommand = new Command(() => BackupSet.CancelBackup(), ()=>  ProcessingStatus != BackupProcessingStatus.NotStarted &&
+                                                                                    ProcessingStatus != BackupProcessingStatus.Cancelled &&
+                                                                                    ProcessingStatus != BackupProcessingStatus.Finished);
+
             
         }
 
@@ -206,12 +214,16 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
             private set { SetValue(TotalFileCountProperty, value); }
         }
 
+        public static readonly PropertyData TotalFileCountMaximumProperty = RegisterProperty("TotalFileCountMaximum", typeof(int), 0);
         /// <summary>
         /// The total number of files to use as a maximum value
-        /// </summary>        
+        /// </summary> 
+        [ViewModelToModel("BackupSet")]
         public int TotalFileCountMaximum
         {
-            get { return TotalFileCount == 0 ? 1 : TotalFileCount; }
+            //get { return TotalFileCount == 0 ? 1 : TotalFileCount; }
+            get { return GetValue<int>(TotalFileCountMaximumProperty); }
+           // private set { SetValue(TotalFileCountMaximumProperty, value); }
         }
 
         public static readonly PropertyData FolderDeleteCountProperty = RegisterProperty("FolderDeleteCount", typeof(int), 0);
@@ -291,9 +303,11 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
             private set { SetValue(ErrorCountProperty, value); }
         }
 
+        public static readonly PropertyData ProcessingProgressCountProperty = RegisterProperty("ProcessingProgressCount", typeof(int), 0);
         /// <summary>
         /// The number of BackupActions that have been processed
         /// </summary>
+        [ViewModelToModel("BackupSet")]
         public int ProcessingProgressCount
         {
             get { return FileCopyCount + FileOverwriteCount + FileSkipCount + ErrorCount; }
@@ -339,6 +353,12 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
         { get; private set; }
 
         public ICommand ExcludeDirectoriesCommand
+        { get; private set; }
+
+        public ICommand RunBackupCommand
+        { get; private set; }
+
+        public ICommand CancelBackupCommand
         { get; private set; }
 
         /// <summary>

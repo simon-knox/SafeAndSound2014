@@ -22,6 +22,9 @@
         <GradientStop Color="#28437A" Offset="0.95" />
     </LinearGradientBrush>
 
+    <SolidColorBrush x:Key="HeadingForegroundBrush" Color="White"/>
+  
+
     <Style TargetType="{x:Type CheckBox}">
         <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
@@ -30,6 +33,13 @@
         <Setter Property="IsExpanded" Value="True" />
         <Setter Property="IsSelected" Value="{Binding IsInitiallySelected, Mode=OneTime}" />
         <Setter Property="KeyboardNavigation.AcceptsReturn" Value="True" />
+    </Style>
+
+    <Style x:Key="HeadingStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="Background" Value="{StaticResource DarkBlueGradientBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource HeadingForegroundBrush}" />
+        
     </Style>
 
     <HierarchicalDataTemplate x:Key="CheckBoxItemTemplate" ItemsSource="{Binding Children, Mode=OneTime}">

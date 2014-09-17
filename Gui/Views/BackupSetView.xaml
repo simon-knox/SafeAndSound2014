@@ -13,19 +13,52 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </catel:StackGrid.RowDefinitions>
         <catel:StackGrid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </catel:StackGrid.ColumnDefinitions>
 
-        <Label Content="Backup Set Name" />
-        <Label Content="{Binding Name}" />
+        <Label Grid.ColumnSpan="2" Content="{Binding Name}" Style="{StaticResource HeadingStyle}"/>
 
         <Label Content="Source Directory" />
         <Label Content="{Binding SourceDirectory}" />
 
         <Label Content="Destination Directory" />
         <Label Content="{Binding DestinationDirectory}" />
+
+        <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
+            <CheckBox IsChecked="{Binding IncludeReadOnly}">Include readonly</CheckBox>
+            <CheckBox IsChecked="{Binding IncludeSystem}">Include system</CheckBox>
+            <CheckBox IsChecked="{Binding IncludeHidden}">Include hidden</CheckBox>
+            <CheckBox IsChecked="{Binding RemoveDeleted}">Remove deleted</CheckBox>
+        </StackPanel>
+
+        <Label Content="Processing Progress Count" />
+        <Label Content="{Binding ProcessingProgressCount}" />   
+
+        <Label Content="Total File Count Maximum" />
+        <Label Content="{Binding TotalFileCountMaximum}" />
+
+        <Label Content="Total file count" />
+        <Label Content="{Binding TotalFileCount}" />
+
+        <ProgressBar Grid.ColumnSpan="2" Height="23" Minimum="0" Value="{Binding ProcessingProgressCount}" Maximum="{Binding TotalFileCountMaximum}"/>
+
+        <Label Content="Status" />
+        <Label Content="{Binding Status}" />
+        
+        <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
+            <Button Width="100"  Command="{Binding RunBackupCommand}">Run Backup</Button>
+            <Button Width="100" Command="{Binding CancelBackupCommand}">Cancel Backup</Button>
+        </StackPanel>
+        
     </catel:StackGrid>
 </catel:UserControl>

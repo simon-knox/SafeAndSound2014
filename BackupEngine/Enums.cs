@@ -41,6 +41,7 @@
         FinishedProcessingActionQueue,
         Started,
         Finished,
+        Cancelled,
         Error
     }
 
