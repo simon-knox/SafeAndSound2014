@@ -60,8 +60,13 @@
     <Compile Include="BackupActions\DirectAction.cs" />
     <Compile Include="BackupActions\OverwrightFileAction.cs" />
     <Compile Include="BackupActions\SkipFileAction.cs" />
+    <Compile Include="BackupError.cs" />
+    <Compile Include="BackupSet.cs" />
+    <Compile Include="BackupSetCollection.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="Events\DriveUnavaliableEventArgs.cs" />
     <Compile Include="Events\SourceRootNotFoundEventArgs.cs" />
+    <Compile Include="GlobalSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
