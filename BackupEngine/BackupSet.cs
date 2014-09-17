@@ -9,9 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using SKnoxConsulting.SafeAndSound.BackupEngine.BackupActions;
 using SKnoxConsulting.SafeAndSound.BackupEngine.Events;
-using SKnoxConsulting.CommonUtilities.IO;
 using System.Diagnostics;
-using SKnoxConsulting.Base;
 using Catel.Data;
 
 namespace SKnoxConsulting.SafeAndSound.BackupEngine

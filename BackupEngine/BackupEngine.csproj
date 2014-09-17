@@ -34,14 +34,8 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Base">
-      <HintPath>..\..\AdditionalLibraries\SKnoxConsulting\CommonUtilities\Base\Base.dll</HintPath>
-    </Reference>
     <Reference Include="Catel.Core, Version=3.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Catel.Core.3.9.0\lib\net45\Catel.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="SKnoxConsulting.CommonUtilities.IO">
-      <HintPath>..\..\AdditionalLibraries\SKnoxConsulting\CommonUtilities\IO\SKnoxConsulting.CommonUtilities.IO.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -67,6 +61,7 @@
     <Compile Include="Events\DriveUnavaliableEventArgs.cs" />
     <Compile Include="Events\SourceRootNotFoundEventArgs.cs" />
     <Compile Include="GlobalSettings.cs" />
+    <Compile Include="IOHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
