@@ -12,5 +12,6 @@
      <MSBuild Projects="$(SolutionDir)\$(SolutionFile)" Properties="Configuration=$(Configuration);"  />
 
    </Target>
+
  
 </Project>
