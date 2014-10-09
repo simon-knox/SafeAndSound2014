@@ -20,6 +20,14 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </catel:StackGrid.RowDefinitions>
         <catel:StackGrid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -29,10 +37,10 @@
         <Label Grid.ColumnSpan="2" Content="{Binding Name}" Style="{StaticResource HeadingStyle}"/>
 
         <Label Content="Source Directory" />
-        <Label Content="{Binding SourceDirectory}" />
+        <TextBlock Text="{Binding SourceDirectory}" />
 
         <Label Content="Destination Directory" />
-        <Label Content="{Binding DestinationDirectory}" />
+        <TextBlock Text="{Binding DestinationDirectory}" />
 
         <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
             <CheckBox IsChecked="{Binding IncludeReadOnly}">Include readonly</CheckBox>
@@ -41,19 +49,37 @@
             <CheckBox IsChecked="{Binding RemoveDeleted}">Remove deleted</CheckBox>
         </StackPanel>
 
+        <Label Content="Delete Folder" />
+        <TextBlock Text="{Binding FolderDeleteCount}" />
+
+        <Label Content="Create Folder" />
+        <TextBlock Text="{Binding FolderCreateCount}" />
+
+        <Label Content="Delete File" />
+        <TextBlock Text="{Binding FileDeleteCount}" />
+
+        <Label Content="Create File" />
+        <TextBlock Text="{Binding FileCopyCount}" />
+
+        <Label Content="Overwrite File" />
+        <TextBlock Text="{Binding FileOverwriteCount}" />
+
+        <Label Content="Skip File" />
+        <TextBlock Text="{Binding FileSkipCount}" />
+
         <Label Content="Processing Progress Count" />
-        <Label Content="{Binding ProcessingProgressCount}" />   
+        <TextBlock Text="{Binding ProcessingProgressCount}" />   
 
         <Label Content="Total File Count Maximum" />
-        <Label Content="{Binding TotalFileCountMaximum}" />
+        <TextBlock Text="{Binding TotalFileCountMaximum}" />
 
         <Label Content="Total file count" />
-        <Label Content="{Binding TotalFileCount}" />
+        <TextBlock Text="{Binding TotalFileCount}" />
 
         <ProgressBar Grid.ColumnSpan="2" Height="23" Minimum="0" Value="{Binding ProcessingProgressCount}" Maximum="{Binding TotalFileCountMaximum}"/>
 
         <Label Content="Status" />
-        <Label Content="{Binding Status}" />
+        <TextBlock Text="{Binding Status}" />
         
         <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
             <Button Width="100"  Command="{Binding RunBackupCommand}">Run Backup</Button>

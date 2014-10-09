@@ -374,6 +374,9 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
 
             if (_uiVisualizerService.ShowDialog(excludedFilesViewModel) ?? false)
             {
+                var v = excludedFilesViewModel.Items[0].GetExcludedDirectories();
+
+
                 int h = 7;//BackupSets.Add(BackupSet);
             }       
             int i = 0;

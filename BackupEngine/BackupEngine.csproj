@@ -57,6 +57,7 @@
     <Compile Include="BackupError.cs" />
     <Compile Include="BackupSet.cs" />
     <Compile Include="BackupSetCollection.cs" />
+    <Compile Include="DirectoryModel.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Events\DriveUnavaliableEventArgs.cs" />
     <Compile Include="Events\SourceRootNotFoundEventArgs.cs" />

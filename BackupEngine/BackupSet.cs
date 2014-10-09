@@ -615,9 +615,10 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
             }
         }
 
-        public List<DirectoryInfo> GetSourceDirectoryTree()
-        {
-            return IOHelper.GetDirectories(SourceDirectory);
+        public DirectoryModel GetSourceDirectoryTree()
+        {    
+            //return IOHelper.GetDirectories(SourceDirectory);
+            return new DirectoryModel(SourceDirectory);
         }
 
         /// <summary>
@@ -625,7 +626,9 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
         /// </summary>
         public void RunBackup()
         {
+            ClearProgressCounts();
             _cancelToken = new CancellationTokenSource();
+            
             Task.Factory.StartNew(() =>
             {
                 if (CheckDriveExists(DestinationDirectory.Substring(0, 1)))
@@ -702,7 +705,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
                     if (destDirs != null)
                     {
                         foreach (DirectoryInfo di in destDirs)
-                        {
+                        {                          
                             if (_cancelToken.IsCancellationRequested)
                             {
                                 ProcessingStatus = BackupProcessingStatus.Cancelled;
@@ -956,6 +959,16 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
                     ErrorCount++;
                 }
             }
+        }
+
+        private void ClearProgressCounts()
+        {
+            FolderDeleteCount = 0;
+            FolderCreateCount = 0;
+            FileCopyCount = 0;
+            FileOverwriteCount = 0;
+            FileSkipCount = 0;
+            ErrorCount = 0;
         }
 
 

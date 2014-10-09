@@ -101,9 +101,11 @@
     <Compile Include="Services\Interfaces\IBackupSetService.cs" />
     <Compile Include="ViewModels\BackupSetCollectionViewModel.cs" />
     <Compile Include="ViewModels\BackupSetViewModel.cs" />
+    <Compile Include="ViewModels\DirectoryViewModel2.cs" />
     <Compile Include="ViewModels\ExcludedFilesViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\BackupSetCollectionWindowViewModel.cs" />
+    <Compile Include="ViewModels\DirectoryViewModel.cs" />
     <Compile Include="Views\BackupSetCollectionView.xaml.cs">
       <DependentUpon>BackupSetCollectionView.xaml</DependentUpon>
     </Compile>
