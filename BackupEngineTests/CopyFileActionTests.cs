@@ -16,11 +16,6 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngineTests
             var copyFileAction = new CopyFileAction("MySource", "MyDestination");
             Assert.IsTrue(copyFileAction.Source == "MySource", string.Format("Source is {0} instead of MySource", copyFileAction.Source));
             Assert.IsTrue(copyFileAction.Destination == "MyDestination", string.Format("Destination is {0} instead of MyDestination", copyFileAction.Destination));
-
-
-
-
-
         }
 
 

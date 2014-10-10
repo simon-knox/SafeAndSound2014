@@ -143,8 +143,12 @@
             // Note that we use the type factory here because it will automatically take care of any dependencies
             // that the BackupSetViewModel will add in the future
             //var typeFactory = this.GetTypeFactory();
+            //var typeFactory = this.GetTypeFactory();
+           // var BackupSetViewModel = typeFactory.CreateInstanceWithParametersAndAutoCompletion<BackupSetViewModel>(SelectedBackupSet);
+            //_uiVisualizerService.ShowDialog(BackupSetViewModel);
+
             var typeFactory = this.GetTypeFactory();
-            var BackupSetViewModel = typeFactory.CreateInstanceWithParametersAndAutoCompletion<BackupSetViewModel>(SelectedBackupSet);
+            var BackupSetViewModel = typeFactory.CreateInstanceWithParametersAndAutoCompletion<DriveSelectionViewModel>();
             _uiVisualizerService.ShowDialog(BackupSetViewModel);
         }
 

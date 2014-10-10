@@ -113,6 +113,17 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
         {
             get { return GetValue<string>(DestinationDirectoryProperty); }
             set { SetValue(DestinationDirectoryProperty, value); }
+        }        
+
+        public static readonly PropertyData DestinationTypeProperty = RegisterProperty("DestinationType", typeof(BackupDestinationType));
+        ///<summary>
+        /// The destination directory of the BackupSet
+        ///</summary>
+        [ViewModelToModel("BackupSet")]
+        public BackupDestinationType DestinationType
+        {
+            get { return GetValue<BackupDestinationType>(DestinationTypeProperty); }
+            set { SetValue(DestinationTypeProperty, value); }
         }
 
         public static readonly PropertyData SourceDirectoryProperty = RegisterProperty("SourceDirectory", typeof(string), string.Empty);

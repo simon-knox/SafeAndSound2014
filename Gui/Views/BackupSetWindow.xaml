@@ -20,6 +20,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </catel:StackGrid.RowDefinitions>
             <catel:StackGrid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -39,7 +40,15 @@
             <Label Margin="11,11,0,0" Content="Destination directory"/>
             <TextBox Margin="7,11,0,0" Height="23" Text="{Binding Path=DestinationDirectory, UpdateSourceTrigger=PropertyChanged}"/>
             <Button Height="23" HorizontalAlignment="Right" Margin="7,11,11,0" Command="{Binding BrowseDestinationCommand}" VerticalAlignment="Bottom" Width="25">...</Button>
-                
+
+            <Label Margin="11,11,0,0" Content="Destination type"/>
+            <StackPanel Orientation="Horizontal" Height="25">
+                <RadioButton Margin="11,11,0,0" IsChecked="{Binding Path=DestinationType, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=LocalDrive}">Local drive</RadioButton>
+                <RadioButton Margin="7,11,0,0" IsChecked="{Binding Path=DestinationType, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=ExternalDrive}">External drive</RadioButton>
+                <RadioButton Margin="7,11,0,0" IsChecked="{Binding Path=DestinationType, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=NetworkLocation}">Network location</RadioButton>
+            </StackPanel>
+            <Label/>
+
             <GroupBox Margin="11,11,11,0" Header="Advanced" Height="91"  VerticalAlignment="Top" Grid.ColumnSpan="2">
                 <catel:StackGrid>
                     <catel:StackGrid.RowDefinitions>

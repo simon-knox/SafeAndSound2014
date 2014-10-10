@@ -31,7 +31,7 @@ namespace SKnoxConsulting.SafeAndSound.Gui.Services
 
             var result = BackupSetCollection.Load(_path, SerializationMode.Xml);
  
-            return result.BackupSets;
+            return result.BackupSets.OrderBy(bs=>bs.Name);
         }
  
         public void SaveBackupSets(IEnumerable<BackupSet> backupSets)

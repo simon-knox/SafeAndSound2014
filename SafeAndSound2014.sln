@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{504551A7
 		SafeAndSound.build = SafeAndSound.build
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GuiTests", "GuiTests\GuiTests.csproj", "{DE6C24C6-8294-412A-8557-1EE757C894BA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{309C7F02-5702-404A-8055-7616830513AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{309C7F02-5702-404A-8055-7616830513AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{309C7F02-5702-404A-8055-7616830513AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE6C24C6-8294-412A-8557-1EE757C894BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE6C24C6-8294-412A-8557-1EE757C894BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE6C24C6-8294-412A-8557-1EE757C894BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE6C24C6-8294-412A-8557-1EE757C894BA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -37,6 +37,7 @@
             uiVisualizerService.Register(typeof(BackupSetViewModel), typeof(BackupSetWindow));
 
             uiVisualizerService.Register(typeof(ExcludedFilesViewModel), typeof(ExcludedDirectoriesWindow));
+            uiVisualizerService.Register(typeof(DriveSelectionViewModel), typeof(DriveSelectionWindow));
 
             base.OnStartup(e);
         }

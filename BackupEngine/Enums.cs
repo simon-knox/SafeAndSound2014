@@ -95,5 +95,7 @@
         ActionQueueBuildFailed = 906
     };
 
+    public enum BackupDestinationType { LocalDrive, ExternalDrive, NetworkLocation};
+
 
 }

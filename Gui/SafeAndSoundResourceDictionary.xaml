@@ -1,9 +1,12 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:catel="clr-namespace:Catel.Windows.Data.Converters;assembly=Catel.MVVM">
+                    xmlns:catel="clr-namespace:Catel.Windows.Data.Converters;assembly=Catel.MVVM"
+                    xmlns:converters="clr-namespace:SKnoxConsulting.SafeAndSound.Gui.Converters"
+                    >
 
 
     <catel:BooleanToCollapsingVisibilityConverter x:Key="BoolToCollapsingVisibilityConverter" />
+    <converters:EnumBooleanConverter x:Key="EnumToBooleanConverter" />
 
 
     

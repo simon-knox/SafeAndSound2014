@@ -28,6 +28,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </catel:StackGrid.RowDefinitions>
         <catel:StackGrid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -41,6 +42,13 @@
 
         <Label Content="Destination Directory" />
         <TextBlock Text="{Binding DestinationDirectory}" />
+
+        <Label Content="Destination type"/>
+        <StackPanel Orientation="Horizontal" Height="25">
+            <RadioButton Margin="0,11,0,0" IsChecked="{Binding Path=DestinationType, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=LocalDrive}">Local drive</RadioButton>
+            <RadioButton Margin="7,11,0,0" IsChecked="{Binding Path=DestinationType, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=ExternalDrive}">External drive</RadioButton>
+            <RadioButton Margin="7,11,0,0" IsChecked="{Binding Path=DestinationType, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=NetworkLocation}">Network location</RadioButton>
+        </StackPanel>
 
         <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
             <CheckBox IsChecked="{Binding IncludeReadOnly}">Include readonly</CheckBox>
@@ -67,13 +75,13 @@
         <Label Content="Skip File" />
         <TextBlock Text="{Binding FileSkipCount}" />
 
-        <Label Content="Processing Progress Count" />
-        <TextBlock Text="{Binding ProcessingProgressCount}" />   
+        <Label Content="Errors" />
+        <TextBlock Text="{Binding ErrorCount}" />
 
-        <Label Content="Total File Count Maximum" />
-        <TextBlock Text="{Binding TotalFileCountMaximum}" />
+        <Label Content="Total processed" />
+        <TextBlock Text="{Binding ProcessingProgressCount}" />  
 
-        <Label Content="Total file count" />
+        <Label Content="Total expected" />
         <TextBlock Text="{Binding TotalFileCount}" />
 
         <ProgressBar Grid.ColumnSpan="2" Height="23" Minimum="0" Value="{Binding ProcessingProgressCount}" Maximum="{Binding TotalFileCountMaximum}"/>

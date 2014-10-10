@@ -144,7 +144,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
 
         public BackupSet()
         {
-
+           // int i = 0;
         }
 
         ///// <summary>
@@ -238,6 +238,16 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
         {
             get { return GetValue<string>(DestinationDirectoryProperty); }
             set { SetValue(DestinationDirectoryProperty, value); }
+        }
+
+        public static readonly PropertyData DestinationTypeProperty = RegisterProperty("DestinationType", typeof(BackupDestinationType));
+        ///<summary>
+        /// The type of destination for the BackupSet
+        ///</summary>
+        public BackupDestinationType DestinationType
+        {
+            get { return GetValue<BackupDestinationType>(DestinationTypeProperty); }
+            set { SetValue(DestinationTypeProperty, value); }
         }
 
         public static readonly PropertyData SourceDirectoryProperty = RegisterProperty("SourceDirectory", typeof(string), string.Empty);
