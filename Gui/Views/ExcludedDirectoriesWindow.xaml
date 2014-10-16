@@ -19,7 +19,7 @@
     <!-- Content -->
 
     <StackPanel Margin="-6">
-        <StackPanel Height="50" Background="{StaticResource DarkBlueGradientBrush}">
+        <StackPanel Height="50" Background="{StaticResource DarkGradientBrush}">
             <Label VerticalContentAlignment="Center" FontSize="18" Foreground="White" Content="Sub Folder Selection"/>
         </StackPanel>
         <catel:StackGrid>

@@ -8,6 +8,7 @@
     using SKnoxConsulting.SafeAndSound.BackupEngine;
     using SKnoxConsulting.SafeAndSound.Gui.Services.Interfaces;
     using System.Collections.ObjectModel;
+    using System.Linq;
 
     /// <summary>
     /// MainWindow view model.
@@ -40,6 +41,7 @@
             AddBackupSet = new Command(OnAddBackupSetExecute);
             EditBackupSet = new Command(OnEditBackupSetExecute, OnEditBackupSetCanExecute);
             RemoveBackupSet = new Command(OnRemoveBackupSetCollectionExecute, OnRemoveBackupSetCollectionCanExecute);
+            Initialize();
         }
 
         #endregion
@@ -49,9 +51,9 @@
         /// <summary>
         /// Gets or sets the selected BackupSet.
         /// </summary>
-        public BackupSet SelectedBackupSet
+        public BackupSetViewModel SelectedBackupSet
         {
-            get { return GetValue<BackupSet>(SelectedBackupSetProperty); }
+            get { return GetValue<BackupSetViewModel>(SelectedBackupSetProperty); }
             set 
             { 
                 SetValue(SelectedBackupSetProperty, value); 
@@ -67,7 +69,7 @@
         /// <summary>
         /// Register the SelectedBackupSet property so it is known in the class.
         /// </summary>
-        public static readonly PropertyData SelectedBackupSetProperty = RegisterProperty("SelectedBackupSet", typeof(BackupSet), null);
+        public static readonly PropertyData SelectedBackupSetProperty = RegisterProperty("SelectedBackupSet", typeof(BackupSetViewModel), null);
 
 
 
@@ -84,16 +86,16 @@
         /// <summary>
         /// Gets or sets the property value.
         /// </summary>
-        public ObservableCollection<BackupSet> BackupSets
+        public ObservableCollection<BackupSetViewModel> BackupSets
         {
-            get { return GetValue<ObservableCollection<BackupSet>>(BackupSetsProperty); }
+            get { return GetValue<ObservableCollection<BackupSetViewModel>>(BackupSetsProperty); }
             set { SetValue(BackupSetsProperty, value); }
         }
 
         /// <summary>
         /// Register the name property so it is known in the class.
         /// </summary>
-        public static readonly PropertyData BackupSetsProperty = RegisterProperty("BackupSets", typeof(ObservableCollection<BackupSet>), null);
+        public static readonly PropertyData BackupSetsProperty = RegisterProperty("BackupSets", typeof(ObservableCollection<BackupSetViewModel>), null);
 
 
         #endregion
@@ -110,14 +112,18 @@
         /// </summary>
         private void OnAddBackupSetExecute()
         {
-            var BackupSet = new BackupSet();
+            //var BackupSet = new BackupSetViewModel();
             // Note that we use the type factory here because it will automatically take care of any dependencies
             // that the BackupSetViewModel will add in the future
             var typeFactory = this.GetTypeFactory();
-            var BackupSetCollectionViewModel = typeFactory.CreateInstanceWithParametersAndAutoCompletion<BackupSetViewModel>(BackupSet);
-            if (_uiVisualizerService.ShowDialog(BackupSetCollectionViewModel) ?? false)
+            var backupSetViewModel = typeFactory.CreateInstanceWithParametersAndAutoCompletion<BackupSetViewModel>(new BackupSet());
+
+
+
+            //var BackupSetCollectionViewModel = typeFactory.CreateInstanceWithParametersAndAutoCompletion<BackupSetViewModel>(BackupSetViewModel);
+            if (_uiVisualizerService.ShowDialog(backupSetViewModel) ?? false)
             {
-                BackupSets.Add(BackupSet);
+                BackupSets.Add(backupSetViewModel);
             }
         }
 
@@ -143,13 +149,13 @@
             // Note that we use the type factory here because it will automatically take care of any dependencies
             // that the BackupSetViewModel will add in the future
             //var typeFactory = this.GetTypeFactory();
-            //var typeFactory = this.GetTypeFactory();
-           // var BackupSetViewModel = typeFactory.CreateInstanceWithParametersAndAutoCompletion<BackupSetViewModel>(SelectedBackupSet);
-            //_uiVisualizerService.ShowDialog(BackupSetViewModel);
+           // var typeFactory = this.GetTypeFactory();
+            //var BackupSetViewModel = typeFactory.CreateInstanceWithParametersAndAutoCompletion<BackupSetViewModel>(SelectedBackupSet);
+            _uiVisualizerService.ShowDialog(SelectedBackupSet);
 
-            var typeFactory = this.GetTypeFactory();
-            var BackupSetViewModel = typeFactory.CreateInstanceWithParametersAndAutoCompletion<DriveSelectionViewModel>();
-            _uiVisualizerService.ShowDialog(BackupSetViewModel);
+            //var typeFactory = this.GetTypeFactory();
+            //var BackupSetViewModel = typeFactory.CreateInstanceWithParametersAndAutoCompletion<DriveSelectionViewModel>();
+            //_uiVisualizerService.ShowDialog(BackupSetViewModel);
         }
 
         /// <summary>
@@ -186,13 +192,14 @@
         protected override void Initialize()
         {
             var backupSets = _backupSetService.LoadBackupSets();
-            BackupSets = new ObservableCollection<BackupSet>(backupSets);
+            BackupSets = new ObservableCollection<BackupSetViewModel>(backupSets.Select(bs => new BackupSetViewModel(bs, _uiVisualizerService)));
         }
 
-        protected override void Close()
+        protected override void OnClosing()
         {
-            
-            _backupSetService.SaveBackupSets(BackupSets);
+            var backupSets = BackupSets.Select(bs => bs.BackupSet);
+            _backupSetService.SaveBackupSets(backupSets);
+            base.OnClosing();
         }
 
         #endregion

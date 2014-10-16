@@ -11,6 +11,7 @@ using SKnoxConsulting.SafeAndSound.BackupEngine.BackupActions;
 using SKnoxConsulting.SafeAndSound.BackupEngine.Events;
 using System.Diagnostics;
 using Catel.Data;
+using Catel.Runtime.Serialization;
 
 namespace SKnoxConsulting.SafeAndSound.BackupEngine
 {
@@ -180,6 +181,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
         ///<summary>
         /// The Mode that the backup set is is e.g. Backup or Restore
         ///</summary>
+        [ExcludeFromSerialization]
         public BackupSetMode BackupMode
         {
             get { return GetValue<BackupSetMode>(BackupModeProperty); }
@@ -314,6 +316,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
         /// <summary>
         /// The status of the backup processing
         /// </summary>
+        [ExcludeFromSerialization]
         public BackupProcessingStatus ProcessingStatus
         {
             get { return GetValue<BackupProcessingStatus>(ProcessingStatusProperty); }
@@ -328,6 +331,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
         /// <summary>
         /// The status of the BackupSet
         /// </summary>
+        [ExcludeFromSerialization]
         public string Status
         {
             get
@@ -364,6 +368,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
         /// <summary>
         /// The total number of files in the BackupSet
         /// </summary>
+        [ExcludeFromSerialization]
         public int TotalFileCount
         {
             get { return GetValue<int>(TotalFileCountProperty); }
@@ -377,6 +382,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
         /// <summary>
         /// The total number of files to use as a maximum value
         /// </summary>
+        [ExcludeFromSerialization]
         public int TotalFileCountMaximum
         {
             get { return TotalFileCount == 0 ? 1 : TotalFileCount; }
@@ -386,6 +392,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
         /// <summary>
         /// The number of folders that have been deleted
         /// </summary>
+        [ExcludeFromSerialization]
         public int FolderDeleteCount
         {
             get { return GetValue<int>(FolderDeleteCountProperty); }
@@ -396,6 +403,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
         ///<summary>
         /// The number of files that have been deleted
         ///</summary>
+        [ExcludeFromSerialization]
         public int FileDeleteCount
         {
             get { return GetValue<int>(FileDeleteCountProperty); }
@@ -406,6 +414,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
         ///<summary>
         /// The number of files that have been copied
         ///</summary>
+        [ExcludeFromSerialization]
         public int FileCopyCount
         {
             get { return GetValue<int>(FileCopyCountProperty); }
@@ -420,6 +429,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
         ///<summary>
         /// The number of folders that have been created
         ///</summary>
+        [ExcludeFromSerialization]
         public int FolderCreateCount
         {
             get { return GetValue<int>(FolderCreateCountProperty); }
@@ -430,6 +440,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
         ///<summary>
         /// The number of files that have been overwritten
         ///</summary>
+        [ExcludeFromSerialization]
         public int FileOverwriteCount
         {
             get { return GetValue<int>(FileOverwriteCountProperty); }
@@ -444,6 +455,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
         ///<summary>
         /// The number of files that have been skipped
         ///</summary>
+        [ExcludeFromSerialization]
         public int FileSkipCount
         {
             get { return GetValue<int>(FileSkipCountProperty); }
@@ -458,6 +470,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
         /// <summary>
         /// The number of errors that have occured
         /// </summary>
+        [ExcludeFromSerialization]
         public int ErrorCount
         {
             get { return GetValue<int>(ErrorCountProperty); }
@@ -472,6 +485,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
         /// <summary>
         /// The number of BackupActions that have been processed
         /// </summary>
+        [ExcludeFromSerialization]
         public int ProcessingProgressCount
         {
             get { return FileCopyCount + FileOverwriteCount + FileSkipCount + ErrorCount; }
@@ -481,6 +495,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
         /// <summary>
         /// The queue of BackupActions
         /// </summary>
+        [ExcludeFromSerialization]
         public Queue<BackupAction> ActionQueue
         {
             get { return GetValue<Queue<BackupAction>>(ActionQueueProperty); }
@@ -491,6 +506,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
         /// <summary>
         /// The queue of BackupActions that will be skipped
         /// </summary>
+        [ExcludeFromSerialization]
         public Queue<BackupAction> SkipFileActionQueue
         {
             get { return GetValue<Queue<BackupAction>>(SkipFileActionQueueProperty); }
@@ -501,6 +517,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
         /// <summary>
         /// The stack of Delete BackupActions
         /// </summary>
+        [ExcludeFromSerialization]
         public Stack<BackupAction> DeleteActionStack
         {
             get { return GetValue<Stack<BackupAction>>(DeleteActionStackProperty); }
@@ -615,15 +632,15 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
         ///<summary>
         /// Saves the BackupSet
         ///</summary>
-        public void Save()
-        {
-            using (Stream stream = File.Open(string.Format("{0}\\{1}.bus", GlobalSettings.ApplicationDataPath, Name),
-                                      FileMode.Create))
-            {
-                var bformatter = new BinaryFormatter();
-                bformatter.Serialize(stream, this);
-            }
-        }
+        //public void Save()
+        //{
+        //    using (Stream stream = File.Open(string.Format("{0}\\{1}.bus", GlobalSettings.ApplicationDataPath, Name),
+        //                              FileMode.Create))
+        //    {
+        //        var bformatter = new BinaryFormatter();
+        //        bformatter.Serialize(stream, this);
+        //    }
+        //}
 
         public DirectoryModel GetSourceDirectoryTree()
         {    

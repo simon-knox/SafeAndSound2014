@@ -2,15 +2,14 @@
                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 				  xmlns:catel="http://catel.codeplex.com"
-                  Background="{StaticResource LightBlueGradientBrush}">
+                  xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+                  >
     
-    <!-- Resources -->
-    <catel:DataWindow.Resources>
-    </catel:DataWindow.Resources>
+
 
     <!-- Content -->
     <StackPanel Margin="-6">
-        <StackPanel Height="50" Background="{StaticResource DarkBlueGradientBrush}">
+        <StackPanel Height="50" Background="{StaticResource DarkGradientBrush}">
             <Label VerticalContentAlignment="Center" FontSize="18" Foreground="White" Content="Create Backup Set"/>
         </StackPanel>
         <catel:StackGrid>

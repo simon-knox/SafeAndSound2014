@@ -30,7 +30,21 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
             BrowseSourceCommand = new Command(() => SourceDirectory = SetDirectory(SourceDirectory, "Select Source Directory"));
             BrowseDestinationCommand = new Command(() => DestinationDirectory = SetDirectory(DestinationDirectory, "Select Destination Directory"));
             ExcludeDirectoriesCommand = new Command(OnExcludeDirectoriesExecute, ()=>!String.IsNullOrEmpty(SourceDirectory));
-            RunBackupCommand = new Command(() => BackupSet.RunBackup(), () =>   ProcessingStatus == BackupProcessingStatus.NotStarted ||
+            RunBackupCommand = new Command(() => 
+                {
+                    if(BackupSet.DestinationType == BackupDestinationType.ExternalDrive)
+                    {
+                        var typeFactory = this.GetTypeFactory();
+                        var driveSelectionViewModel = typeFactory.CreateInstanceWithParametersAndAutoCompletion<DriveSelectionViewModel>();
+                        if(_uiVisualizerService.ShowDialog(driveSelectionViewModel) == true )
+                        {
+                            UpdateDestinationDriveLetter(driveSelectionViewModel.SelectedDrive.Name);
+                        }
+                        
+                    }
+                    BackupSet.RunBackup();
+                }  
+                , () =>   ProcessingStatus == BackupProcessingStatus.NotStarted ||
                                                                                 ProcessingStatus == BackupProcessingStatus.Cancelled ||
                                                                                 ProcessingStatus == BackupProcessingStatus.Finished);
             CancelBackupCommand = new Command(() => BackupSet.CancelBackup(), ()=>  ProcessingStatus != BackupProcessingStatus.NotStarted &&
@@ -38,7 +52,7 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
                                                                                     ProcessingStatus != BackupProcessingStatus.Finished);
 
             
-        }
+        }        
 
         public static readonly PropertyData BackupSetProperty = RegisterProperty("BackupSet", typeof(BackupSet), null);
         [Model]
@@ -408,6 +422,14 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
                 return selectDirectoryService.DirectoryName;
             }
             return directory;
+        }
+
+        private void UpdateDestinationDriveLetter(string driveName)
+        {
+            if (!string.IsNullOrWhiteSpace(driveName))
+            {
+                DestinationDirectory = driveName.Substring(0,1) +  DestinationDirectory.Substring(DestinationDirectory.IndexOf(':'));
+            }
         }
     }
 }

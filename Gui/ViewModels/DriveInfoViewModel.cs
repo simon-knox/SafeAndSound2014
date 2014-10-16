@@ -25,6 +25,24 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
             get { return _driveInfo.AvailableFreeSpace; }
         }
 
+        public long UsedSpace
+        {
+            get { return TotalSize - AvailableFreeSpace; }
+        }
+
+        public double PercentageFreeSpace
+        {
+            get 
+            {                
+                return (100.0 / TotalSize) * AvailableFreeSpace; 
+            }
+        }
+
+        public string AvailableFreeSpaceString
+        {
+            get { return NumberFormaters.ConvertBytesToString(_driveInfo.AvailableFreeSpace); }
+        }
+
         public string DriveFormat
         {
             get { return _driveInfo.DriveFormat; }
@@ -50,7 +68,12 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
         public string TotalSizeString
         {
             get { return NumberFormaters.ConvertBytesToString(TotalSize); }
-        }        
+        }
+        
+        public string SpaceStatusString
+        {
+            get { return string.Format("{0} free of {1}", AvailableFreeSpaceString, TotalSizeString); }
+        }
 
         public string VolumeLabel
         {

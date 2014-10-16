@@ -7,7 +7,7 @@
     /// <summary>
     /// Interaction logic for BackupSetWindow.xaml.
     /// </summary>
-    public partial class BackupSetWindow : DataWindow
+    public partial class BackupSetWindow 
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BackupSetWindow"/> class.

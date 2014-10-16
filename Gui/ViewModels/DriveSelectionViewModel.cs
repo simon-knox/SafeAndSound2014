@@ -53,5 +53,11 @@ using System.IO;
             get;
             set;
         }
+
+        public DriveInfoViewModel SelectedDrive
+        {
+            get;
+            set;
+        }
     }
 }
