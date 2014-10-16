@@ -5,11 +5,10 @@
                   xmlns:converters="clr-namespace:Catel.Windows.Data.Converters;assembly=Catel.Extensions.Controls"
                   xmlns:views="clr-namespace:SKnoxConsulting.SafeAndSound.Gui.Views"
                   xmlns:controls="clr-namespace:SKnoxConsulting.SafeAndSound.Gui.Controls" 
-                  xmlns:mui="http://firstfloorsoftware.com/ModernUI"            
+                  xmlns:mui="http://firstfloorsoftware.com/ModernUI"          
                   Title="Safe and Sound 2014"  
                   ShowInTaskbar="True" SizeToContent="Manual" WindowStartupLocation="Manual" WindowState="Maximized" 
-                  Style="{StaticResource BlankWindow}"
-                  >
+                  Style="{StaticResource BlankWindow}">
     
 
     
