@@ -221,6 +221,19 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
         //    }
         //}
 
+
+        [ExcludeFromSerialization]
+        public IEnumerable<BackupAction> ActionLog
+        {
+            get
+            {
+                return ActionQueue.Union(SkipFileActionQueue).Union(DeleteActionStack);
+                
+                //GetValue<IEnumerable<BackupAction>>(ActionLogProperty);
+            }
+
+        }
+
         public static readonly PropertyData ExcludedDirectoriesProperty = RegisterProperty("ExcludedDirectories", typeof(HashSet<string>), () => new HashSet<string>());
         ///<summary>
         /// The set of excluded directories from the BackupSet
@@ -324,6 +337,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
             { 
                 SetValue(ProcessingStatusProperty, value);
                 RaisePropertyChanged(() => Status);
+                RaisePropertyChanged(() => ActionLog);
             }
         }
 
@@ -361,6 +375,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
             {
                 SetValue(StatusProperty, value);
                 RaisePropertyChanged(() => ProcessingStatus);
+                RaisePropertyChanged(() => ActionLog);
             }
         }
 
@@ -462,7 +477,8 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
             private set 
             { 
                 SetValue(FileSkipCountProperty, value);
-                RaisePropertyChanged(() => ProcessingProgressCount);            
+                RaisePropertyChanged(() => ProcessingProgressCount);
+                RaisePropertyChanged(() => ActionLog);
             }
         }
 

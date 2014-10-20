@@ -37,11 +37,16 @@
 
             _serviceLocator = ServiceLocator.Default;
             _serviceLocator.RegisterType<IBackupSetService, BackupSetService>();
+            _serviceLocator.RegisterType<IMessageBoxService, MessageBoxService>();
 
             var uiVisualizerService = _serviceLocator.ResolveType<IUIVisualizerService>();
-            uiVisualizerService.Register(typeof(BackupSetViewModel), typeof(BackupSetWindow));
+            uiVisualizerService.Register(typeof(BackupSetViewModel), typeof(BackupSetDialog));
             uiVisualizerService.Register(typeof(ExcludedFilesViewModel), typeof(ExcludedDirectoriesWindow));
             uiVisualizerService.Register(typeof(DriveSelectionViewModel), typeof(DriveSelectionWindow));
+
+            
+
+            
 
             var typeFactory = this.GetTypeFactory();
                         var shellWindowViewModel = typeFactory.CreateInstanceWithParametersAndAutoCompletion<MainWindowViewModel>();

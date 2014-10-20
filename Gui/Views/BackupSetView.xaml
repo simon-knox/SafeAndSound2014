@@ -1,90 +1,119 @@
 ﻿<UserControl x:Class="SKnoxConsulting.SafeAndSound.Gui.Views.BackupSetView"
                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-				   xmlns:catel="http://catel.codeplex.com">
+				   xmlns:catel="http://catel.codeplex.com">  
     
-    <!-- Resources -->
-    <UserControl.Resources>
-    </UserControl.Resources>
 
-    <!-- Content -->
     <Border BorderBrush="{StaticResource WindowBorder}" BorderThickness="1" Margin="11,0,11,11">
         <catel:StackGrid>
             <catel:StackGrid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </catel:StackGrid.RowDefinitions>
-        <ScrollViewer >
-    <catel:StackGrid Margin="7">
-        <catel:StackGrid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </catel:StackGrid.RowDefinitions>
-        <catel:StackGrid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-        </catel:StackGrid.ColumnDefinitions>
+            <ScrollViewer >
+                <catel:StackGrid Margin="7">
+                    <catel:StackGrid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" /> 
+                    </catel:StackGrid.RowDefinitions>
+                    <catel:StackGrid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </catel:StackGrid.ColumnDefinitions>
+                    
+                    <TextBlock Grid.ColumnSpan="2" Style="{StaticResource Heading1}" Text="{Binding Name}" />
+                    
+                    <Label Content="Source Directory" />
+                    <TextBlock Text="{Binding SourceDirectory}" />
 
-        <TextBlock Grid.ColumnSpan="2" Style="{StaticResource Heading1}" Text="{Binding Name}" />
+                    <Label Content="Destination Directory" />
+                    <TextBlock Text="{Binding DestinationDirectory}" />
 
-        <Label Content="Source Directory" />
-        <TextBlock Text="{Binding SourceDirectory}" />
+                    <Label Content="Destination type"/>
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton Margin="0,0,0,0" IsChecked="{Binding Path=DestinationType, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=LocalDrive}">Local drive</RadioButton>
+                        <RadioButton Margin="7,0,0,0" IsChecked="{Binding Path=DestinationType, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=ExternalDrive}">External drive</RadioButton>
+                        <RadioButton Margin="7,0,0,0" IsChecked="{Binding Path=DestinationType, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=NetworkLocation}">Network location</RadioButton>
+                    </StackPanel>   
 
-        <Label Content="Destination Directory" />
-        <TextBlock Text="{Binding DestinationDirectory}" />
+                    <Label Content="File properties"/>
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox Margin ="0" IsChecked="{Binding IncludeReadOnly}">Include readonly</CheckBox>
+                        <CheckBox IsChecked="{Binding IncludeSystem}">Include system</CheckBox>
+                        <CheckBox IsChecked="{Binding IncludeHidden}">Include hidden</CheckBox>
+                        <CheckBox IsChecked="{Binding RemoveDeleted}">Remove deleted</CheckBox>
+                    </StackPanel>
 
-        <Label Content="Destination type"/>
-        <StackPanel Orientation="Horizontal">
-            <RadioButton Margin="0,0,0,0" IsChecked="{Binding Path=DestinationType, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=LocalDrive}">Local drive</RadioButton>
-            <RadioButton Margin="7,0,0,0" IsChecked="{Binding Path=DestinationType, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=ExternalDrive}">External drive</RadioButton>
-            <RadioButton Margin="7,0,0,0" IsChecked="{Binding Path=DestinationType, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=NetworkLocation}">Network location</RadioButton>
-        </StackPanel>
+                    <catel:StackGrid Grid.ColumnSpan="2" Visibility="{Binding ShowBackupRunDetails, Converter={StaticResource BoolToCollapsingVisibilityConverter}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
 
-        <Label Content="File properties"/>
-        <StackPanel Orientation="Horizontal">
-            <CheckBox IsChecked="{Binding IncludeReadOnly}">Include readonly</CheckBox>
-            <CheckBox IsChecked="{Binding IncludeSystem}">Include system</CheckBox>
-            <CheckBox IsChecked="{Binding IncludeHidden}">Include hidden</CheckBox>
-            <CheckBox IsChecked="{Binding RemoveDeleted}">Remove deleted</CheckBox>
-        </StackPanel>
+                        <Label Content="Delete Folder" />
+                        <TextBlock Text="{Binding FolderDeleteCount}" />
 
-        <Label Content="Delete Folder" />
-        <TextBlock Text="{Binding FolderDeleteCount}" />
+                        <Label Content="Create Folder" />
+                        <TextBlock Text="{Binding FolderCreateCount}" />
 
-        <Label Content="Create Folder" />
-        <TextBlock Text="{Binding FolderCreateCount}" />
+                        <Label Content="Delete File" />
+                        <TextBlock Text="{Binding FileDeleteCount}" />
 
-        <Label Content="Delete File" />
-        <TextBlock Text="{Binding FileDeleteCount}" />
+                        <Label Content="Create File" />
+                        <TextBlock Text="{Binding FileCopyCount}" />
 
-        <Label Content="Create File" />
-        <TextBlock Text="{Binding FileCopyCount}" />
+                        <Label Content="Overwrite File" />
+                        <TextBlock Text="{Binding FileOverwriteCount}" />
 
-        <Label Content="Overwrite File" />
-        <TextBlock Text="{Binding FileOverwriteCount}" />
+                        <Label Content="Skip File" />
+                        <TextBlock Text="{Binding FileSkipCount}" />
 
-        <Label Content="Skip File" />
-        <TextBlock Text="{Binding FileSkipCount}" />
+                        <Label Content="Errors" />
+                        <TextBlock Text="{Binding ErrorCount}" />
 
-        <Label Content="Errors" />
-        <TextBlock Text="{Binding ErrorCount}" />
+                        <Expander Grid.ColumnSpan="2" Header="Log" MaxHeight="300">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" Grid.Row="0">
+                                    <CheckBox IsChecked="{Binding ShowPendingInLog}" Content="Pending"/>
+                                    <CheckBox IsChecked="{Binding ShowCompleteInLog}" Content="Complete"/>
+                                    <CheckBox IsChecked="{Binding ShowSkippedInLog}" Content="Skipped"/>
+                                    <CheckBox IsChecked="{Binding ShowFailedInLog}" Content="Failed"/>
+                                </StackPanel>
+                                <DataGrid Grid.Row="1" ItemsSource="{Binding ActionLog2}" AutoGenerateColumns="False">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Binding="{Binding Path=Status}" Header="Status" />
+                                        <DataGridTextColumn Binding="{Binding Path=ActionName}" Header="Action" />
+                                        <DataGridTextColumn Binding="{Binding Path=From}" Header="From" />
+                                        <DataGridTextColumn Binding="{Binding Path=To}" Header="To" />
+                                        <DataGridTextColumn Binding="{Binding Path=ErrorMessage}" Header="Error Message" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Grid>
+        </Expander>
 
         <Label Content="Total processed" />
         <TextBlock Text="{Binding Path=ProcessingProgressCount, Mode=OneWay}" />  
@@ -94,11 +123,10 @@
 
         <ProgressBar Grid.ColumnSpan="2" Height="18" Minimum="0" Value="{Binding Path=ProcessingProgressCount, Mode=OneWay}" Maximum="{Binding TotalFileCountMaximum}"/>
 
-        <Label Content="Status" />
-        <TextBlock Text="{Binding Status}" />
-        
-        
-        
+                    </catel:StackGrid>
+
+                    <Label Content="Status" />
+        <TextBlock Text="{Binding Status}" />    
     </catel:StackGrid>
         </ScrollViewer>
             <StackPanel Orientation="Horizontal">

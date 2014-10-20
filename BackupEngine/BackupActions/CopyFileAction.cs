@@ -58,8 +58,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine.BackupActions
                 {
                     return ActionFailed(string.Format(FILE_OR_FOLDER_ALREADY_EXISTS, _destination));
                 }
-                var fi = new FileInfo(_source);
-                fi.CopyTo(_destination, false);
+                File.Copy(_source,_destination);      
             }
             catch (Exception ex)
             {
@@ -67,6 +66,11 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine.BackupActions
             }
             _status = ActionStatus.Complete;
             return true;
+        }
+
+        public override string ActionName
+        {
+            get { return "Copy File"; }
         }
     }
 }

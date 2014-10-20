@@ -47,11 +47,14 @@
       <HintPath>..\packages\ModernUI.WPF.1.0.6\lib\net45\FirstFloor.ModernUI.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
+    <Reference Include="MahApps.Metro">
+      <HintPath>..\packages\MahApps.Metro.0.14.0.0\lib\net45\MahApps.Metro.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Catel.MVVM.3.9.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <HintPath>..\packages\MahApps.Metro.0.14.0.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -70,6 +73,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Services\Interfaces\IMessageBoxService.cs" />
+    <Compile Include="Services\MessageBoxService.cs" />
+    <Compile Include="ViewModels\ActionLogItemViewModel.cs" />
+    <Compile Include="Views\BackupSetDialog.xaml.cs">
+      <DependentUpon>BackupSetDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Resources\SafeAndSoundResourceDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -83,10 +92,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\BackupSetCollectionView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\BackupSetCollectionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -139,9 +144,6 @@
     <Compile Include="Views\BackupSetCollectionView.xaml.cs">
       <DependentUpon>BackupSetCollectionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\BackupSetCollectionWindow.xaml.cs">
-      <DependentUpon>BackupSetCollectionWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\BackupSetsListView.xaml.cs">
       <DependentUpon>BackupSetsListView.xaml</DependentUpon>
     </Compile>
@@ -161,6 +163,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\BackupSetDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -206,6 +212,15 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\FreeVector-Colorful-Swirls-VectorBW.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\BlueVector.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\127Vector.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\appbar.dotdotdot.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

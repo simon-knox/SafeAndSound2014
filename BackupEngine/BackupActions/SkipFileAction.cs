@@ -29,5 +29,10 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine.BackupActions
             _status = ActionStatus.Skipped;
             return true;
         }
+
+        public override string ActionName
+        {
+            get { return "Skip File"; }
+        }
     }
 }

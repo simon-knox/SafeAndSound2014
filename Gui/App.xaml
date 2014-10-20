@@ -8,7 +8,7 @@
         <ResourceDictionary Source="/Catel.Extensions.Controls;component/themes/generic.xaml">
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/FirstFloor.ModernUI;component/Assets/ModernUI.xaml" />
-                <ResourceDictionary Source="/FirstFloor.ModernUI;component/Assets/ModernUI.Dark.xaml"/>
+                <ResourceDictionary Source="/FirstFloor.ModernUI;component/Assets/ModernUI.Light.xaml"/>
                 <!--<ResourceDictionary Source="/Catel.Extensions.Controls;component/themes/generic.xaml"/>-->
                 <ResourceDictionary Source="/Resources/SafeAndSoundResourceDictionary.xaml"/>
                 <!--<<ResourceDictionary Source="Styles.xaml" />-->

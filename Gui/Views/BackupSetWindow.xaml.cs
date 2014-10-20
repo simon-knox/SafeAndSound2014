@@ -22,8 +22,7 @@
         /// <remarks>
         /// This constructor can be used to use view-model injection.
         /// </remarks>
-        public BackupSetWindow(BackupSetCollectionWindowViewModel viewModel)
-            : base(viewModel, DataWindowMode.OkCancel, null, DataWindowDefaultButton.OK, true, InfoBarMessageControlGenerationMode.None)
+        public BackupSetWindow(BackupSetCollectionWindowViewModel viewModel)            
         {
             InitializeComponent();
         }

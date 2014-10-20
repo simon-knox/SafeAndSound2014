@@ -13,13 +13,21 @@
 
     
     <!-- Content -->
+    <mui:ModernWindow.Background>
+        <ImageBrush>
+            <ImageBrush.ImageSource>
+                <BitmapImage UriSource="/Resources/127Vector.jpg"/>
+            </ImageBrush.ImageSource>
+        </ImageBrush>
+    </mui:ModernWindow.Background>
+
     <catel:StackGrid>
         <catel:StackGrid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </catel:StackGrid.RowDefinitions>
         <catel:StackGrid.ColumnDefinitions>
-            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </catel:StackGrid.ColumnDefinitions>
         

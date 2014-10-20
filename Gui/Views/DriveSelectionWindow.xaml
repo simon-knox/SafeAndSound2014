@@ -1,33 +1,22 @@
-﻿<catel:DataWindow x:Class="SKnoxConsulting.SafeAndSound.Gui.Views.DriveSelectionWindow"
+﻿<mui:ModernDialog x:Class="SKnoxConsulting.SafeAndSound.Gui.Views.DriveSelectionWindow"
                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 				  xmlns:catel="http://catel.codeplex.com"
-                  Background="{StaticResource LightGradientBrush}">
+                  xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+                  Title="External Drive Location">
 
-    <!-- Resources -->
-    <catel:DataWindow.Resources>
-    </catel:DataWindow.Resources>
-
-    <!-- Content -->
-    <StackPanel Margin="-6">
-        <StackPanel Height="50" Background="{StaticResource DarkGradientBrush}">
-            <Label VerticalContentAlignment="Center" FontSize="18" Foreground="White" Content="Select External Drive Location"/>
-        </StackPanel>
         <catel:StackGrid>
             <catel:StackGrid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </catel:StackGrid.RowDefinitions>
             <catel:StackGrid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </catel:StackGrid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+        </catel:StackGrid.ColumnDefinitions>
 
 
-            <Label Margin="11,11,0,0" Grid.ColumnSpan="2" Content="Select the drive letter of the external drive to backup to"/>
-
-            <Label Margin="11,11,0,0" Content="Drives"/>
-            <ListBox ItemsSource="{Binding Drives}" SelectedItem="{Binding SelectedDrive}">
+            <Label Margin="11,11,0,0" Grid.ColumnSpan="2" Content="Select external drive to backup to"/>
+        <ListBox ItemsSource="{Binding Drives}" SelectedItem="{Binding SelectedDrive}" Height="400" Width="400" Background="White">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid>
@@ -42,7 +31,7 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>                                
                             </Grid.ColumnDefinitions>
-                            <Image Grid.RowSpan="3" Source="{Binding Image}"  IsEnabled="{Binding IsReady}"/>
+                            <Image Grid.RowSpan="3" Source="{Binding Image}" Margin="7,0,0,0"  IsEnabled="{Binding IsReady}"/>
                             <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Name}" IsEnabled="{Binding IsReady}"/>
                             <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding VolumeLabel}"/>
                             <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding DriveType}"/>
@@ -56,35 +45,5 @@
                 </ListBox.ItemTemplate>
             </ListBox>            
         </catel:StackGrid>
-    </StackPanel>
-    <!--<catel:StackGrid>
-        <catel:StackGrid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </catel:StackGrid.RowDefinitions>
-        <catel:StackGrid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-        </catel:StackGrid.ColumnDefinitions>
-        
-
-        <Label Content="Backup Set Name" />
-        <TextBox Text="{Binding Name, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" />
-
-        <Label Content="Source Directory" />
-        <TextBox Text="{Binding SourceDirectory, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" />
-
-        <Label Content="" />
-        <Button Content="Browse" />        
-
-        <Label Content="Destination Directory" />
-        <TextBox Text="{Binding DestinationDirectory, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" />
-
-        <Label Content="" />
-        <Button Content="Browse" />
-    </catel:StackGrid>-->
-</catel:DataWindow>
+</mui:ModernDialog>
 

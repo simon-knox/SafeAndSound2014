@@ -11,9 +11,9 @@
     <converters:FreeSpaceToColourConverter x:Key="FreeSpaceToColourConverter" />
 
 
-    <Rectangle x:Key="WindowBackgroundContent">
+    <Rectangle x:Key="WindowBackgroundContent" x:Shared="false">
         <Rectangle.Fill>
-            <ImageBrush Opacity="0.3" ImageSource="/Resources/FreeVector-Colorful-Swirls-VectorBW.jpg" Stretch="UniformToFill"></ImageBrush>
+            <ImageBrush Opacity="0.1" ImageSource="/Resources/BlueVector.jpg" Stretch="UniformToFill"></ImageBrush>
         </Rectangle.Fill>
     </Rectangle>
 
@@ -45,9 +45,13 @@
 -->
 
     <!--Dark Theme-->
+    
+    <!--CustomColors>-->
+    <Color x:Key="SafeAndSoundGreen">#60A917</Color>
+    <Color x:Key="SafeAndSoundBlue">#1BA1E2</Color>
 
     <!--Modern UI Colors-->
-    <Color x:Key="AccentColor">#60A917</Color>
+    <Color x:Key="AccentColor">#1BA1E2</Color>
     
     <!--Modern UI Brushes-->
     <SolidColorBrush x:Key="ButtonBackgroundHover" Color="{StaticResource AccentColor}"/>

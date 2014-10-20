@@ -26,5 +26,10 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine.BackupActions
         {
             get { return _path; }
         }
+
+        public override string ActionName
+        {
+            get{return string.Empty;}
+        }
     }
 }

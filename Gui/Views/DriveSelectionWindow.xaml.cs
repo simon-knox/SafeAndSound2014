@@ -1,5 +1,6 @@
 ﻿using Catel.Windows;
 using SKnoxConsulting.SafeAndSound.Gui.ViewModels;
+using System.Windows.Controls;
 
 namespace SKnoxConsulting.SafeAndSound.Gui.Views
 {
@@ -8,7 +9,7 @@ namespace SKnoxConsulting.SafeAndSound.Gui.Views
     /// <summary>
     /// Interaction logic for BackupSetWindow.xaml.
     /// </summary>
-    public partial class DriveSelectionWindow : DataWindow
+    public partial class DriveSelectionWindow 
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DriveSelectionWindow"/> class.
@@ -24,9 +25,10 @@ namespace SKnoxConsulting.SafeAndSound.Gui.Views
         /// This constructor can be used to use view-model injection.
         /// </remarks>
         public DriveSelectionWindow(DriveSelectionViewModel viewModel)
-            : base(viewModel, DataWindowMode.OkCancel, null, DataWindowDefaultButton.OK, true, InfoBarMessageControlGenerationMode.None)
         {
             InitializeComponent();
+            Buttons = new Button[] { OkButton, CancelButton };
+            DataContext = viewModel;
         }
     }
 }

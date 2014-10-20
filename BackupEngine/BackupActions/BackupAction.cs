@@ -42,6 +42,11 @@
             get { return _errorMessage; }
         }
 
+        public abstract string ActionName
+        {
+            get;
+        }
+
         /// <summary>
         /// Marks the BackupAction as failed
         /// </summary>

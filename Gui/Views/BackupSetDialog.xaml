@@ -1,0 +1,72 @@
+﻿<mui:ModernDialog x:Class="SKnoxConsulting.SafeAndSound.Gui.Views.BackupSetDialog"
+                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                  xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+                  xmlns:catel="http://catel.codeplex.com"
+                  mc:Ignorable="d" 
+                  d:DesignHeight="300" d:DesignWidth="600"
+
+                  Title="Edit Backup Set">
+
+    <!-- Note: ModernDialog buttons are defined in the constructor of the code behind class -->
+
+    <catel:StackGrid>
+        <catel:StackGrid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </catel:StackGrid.RowDefinitions>
+        <catel:StackGrid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </catel:StackGrid.ColumnDefinitions>
+
+        <Label Content="Backup set name"/>
+        <TextBox  Margin="7,0,0,0" Text="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}"/>
+        <Label/>
+
+        <Label Margin="0,7,0,0" Content="Source directory"/>
+        <TextBox Margin="7,7,0,0" Text="{Binding Path=SourceDirectory, UpdateSourceTrigger=PropertyChanged}"/>
+        <Button HorizontalAlignment="Right" Margin="0,0,0,0" Width="25" Command="{Binding BrowseSourceCommand}" VerticalAlignment="Bottom">...</Button>
+
+        <Label Margin="0,7,0,0" Content="Destination directory"/>
+        <TextBox Margin="7,7,0,0" Text="{Binding Path=DestinationDirectory, UpdateSourceTrigger=PropertyChanged}"/>
+        <Button HorizontalAlignment="Right" Margin="7,7,0,0" Width="25" Command="{Binding BrowseDestinationCommand}" VerticalAlignment="Bottom" >...</Button>
+
+        <catel:EmptyColumn/>
+        <TextBlock Margin="7,7,0,0" Grid.ColumnSpan="2">
+            <Hyperlink Command="{Binding ExcludeDirectoriesCommand}">Exclude some sub folders</Hyperlink>
+        </TextBlock>
+
+        <Label Margin="0,7,0,0" Content="Destination type"/>
+        <StackPanel Orientation="Horizontal">
+            <RadioButton Margin="7,7,0,0" IsChecked="{Binding Path=DestinationType, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=LocalDrive}">Local drive</RadioButton>
+            <RadioButton Margin="7,7,0,0" IsChecked="{Binding Path=DestinationType, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=ExternalDrive}">External drive</RadioButton>
+            <RadioButton Margin="7,7,0,0" IsChecked="{Binding Path=DestinationType, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=NetworkLocation}">Network location</RadioButton>
+        </StackPanel>
+        <Label/>
+
+        <Label Margin="0,7,0,0" Content="File properties"/>
+        <catel:StackGrid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>                
+            </Grid.RowDefinitions>
+            <CheckBox Margin="7,7,0,0" IsChecked="{Binding IncludeSystem}" >Include system files</CheckBox>
+            <CheckBox Margin="7,7,0,0" VerticalContentAlignment="Center" IsChecked="{Binding IncludeReadOnly}" >Include read only files</CheckBox>
+            <CheckBox Margin="7,7,0,0" IsChecked="{Binding IncludeHidden}" >Include hidden files</CheckBox>
+            <CheckBox Margin="7,7,0,0" IsChecked="{Binding RemoveDeleted}" >Remove deleted files</CheckBox>
+        </catel:StackGrid>        
+    </catel:StackGrid>
+
+</mui:ModernDialog>

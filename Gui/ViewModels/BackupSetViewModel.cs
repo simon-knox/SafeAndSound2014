@@ -51,7 +51,17 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
                                                                                     ProcessingStatus != BackupProcessingStatus.Cancelled &&
                                                                                     ProcessingStatus != BackupProcessingStatus.Finished);
 
+            BackupSet.PropertyChanged += BackupSetPropertyChanged;
+
             
+        }
+
+        void BackupSetPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if(e.PropertyName == "Status")
+                RaisePropertyChanged(() => ShowBackupRunDetails);
+            if (e.PropertyName == "ActionLog")
+                RaisePropertyChanged(() => ActionLog2);
         }        
 
         public static readonly PropertyData BackupSetProperty = RegisterProperty("BackupSet", typeof(BackupSet), null);
@@ -72,6 +82,51 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
             get { return GetValue<BackupSetMode>(BackupModeProperty); }
             set { SetValue(BackupModeProperty, value); }
         }
+
+        public static readonly PropertyData ActionLogProperty = RegisterProperty("ActionLog", typeof(IEnumerable<BackupAction>), () => new List<BackupAction>());
+        [ViewModelToModel("BackupSet")]
+        public IEnumerable<BackupAction> ActionLog
+        {
+            get { return GetValue<IEnumerable<BackupAction>>(ActionLogProperty); }
+        }
+
+
+        public IEnumerable<ActionLogItemViewModel> ActionLog2
+        {
+            get
+            {
+                //IEnumerable<ActionLogItemViewModel> actionLog2 = null;
+                
+                //var t = Task.Run(()=> actionLog2 =  ActionLog.Where(a => (a.Status == ActionStatus.Pending && ShowPendingInLog) ||
+                //                                (a.Status == ActionStatus.Complete && ShowCompleteInLog) ||
+                //                                (a.Status == ActionStatus.Skipped && ShowSkippedInLog) ||
+                //                                (a.Status == ActionStatus.Failed && ShowFailedInLog))
+                //                  .Select(a => new ActionLogItemViewModel(a)));
+                //await Task.
+                //return actionLog2;
+
+                return ActionLog.Where(a => (a.Status == ActionStatus.Pending && ShowPendingInLog) ||
+                                                (a.Status == ActionStatus.Complete && ShowCompleteInLog) ||
+                                                (a.Status == ActionStatus.Skipped && ShowSkippedInLog) ||
+                                                (a.Status == ActionStatus.Failed && ShowFailedInLog))
+                                .Select(a => new ActionLogItemViewModel(a));
+            }              
+           
+        }
+
+        //private async Task<IEnumerable<ActionLogItemViewModel>> FilterActionLog()
+        //{
+        //    IEnumerable<ActionLogItemViewModel> actionLog2 = null;
+                
+        //    await Task.Run(()=> actionLog2 =  ActionLog.Where(a => (a.Status == ActionStatus.Pending && ShowPendingInLog) ||
+        //                                        (a.Status == ActionStatus.Complete && ShowCompleteInLog) ||
+        //                                        (a.Status == ActionStatus.Skipped && ShowSkippedInLog) ||
+        //                                        (a.Status == ActionStatus.Failed && ShowFailedInLog))
+        //                          .Select(a => new ActionLogItemViewModel(a)));
+        //    return;            
+        //}
+
+        
 
         /////<summary>
         ///// The list of BackupErrors
@@ -214,7 +269,11 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
         public BackupProcessingStatus ProcessingStatus
         {
             get { return GetValue<BackupProcessingStatus>(ProcessingStatusProperty); }
-            set { SetValue(ProcessingStatusProperty, value); }
+            set 
+            { 
+                SetValue(ProcessingStatusProperty, value);
+                RaisePropertyChanged(() => ShowBackupRunDetails);
+            }
         }
 
         public static readonly PropertyData StatusProperty = RegisterProperty("Status", typeof(string));
@@ -224,8 +283,21 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
         [ViewModelToModel("BackupSet")]
         public string Status
         {
-            get { return GetValue<string>(StatusProperty); }            
-            private set { SetValue(StatusProperty, value); }
+            get
+            {
+                return GetValue<string>(StatusProperty);
+            }            
+            private set 
+            {
+                SetValue(StatusProperty, value);
+                RaisePropertyChanged(() => ShowBackupRunDetails);
+            }
+        }
+
+        [ExcludeFromValidation]
+        public bool ShowBackupRunDetails
+        {
+            get { return Status != "Ready."; }
         }
 
         public static readonly PropertyData TotalFileCountProperty = RegisterProperty("TotalFileCount", typeof(int), 0);
@@ -370,6 +442,54 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
             get { return GetValue<Stack<BackupAction>>(DeleteActionStackProperty); }
             private set { SetValue(DeleteActionStackProperty, value); }
         }
+
+        public static readonly PropertyData ShowPendingInLogProperty = RegisterProperty("ShowPendingInLog", typeof(bool),true);
+
+        public bool ShowPendingInLog
+        {
+            get { return GetValue<bool>(ShowPendingInLogProperty); }
+            set 
+            { 
+                SetValue(ShowPendingInLogProperty, value);
+                RaisePropertyChanged(() => ActionLog2);
+            }
+        }
+
+        public static readonly PropertyData ShowCompleteInLogProperty = RegisterProperty("ShowCompleteInLog", typeof(bool),true);
+
+        public bool ShowCompleteInLog
+        {
+            get { return GetValue<bool>(ShowCompleteInLogProperty); }
+            set 
+            { 
+                SetValue(ShowCompleteInLogProperty, value); 
+                RaisePropertyChanged(() => ActionLog2); 
+            }
+        }
+
+        public static readonly PropertyData ShowSkippedInLogProperty = RegisterProperty("ShowSkippedInLog", typeof(bool),true);
+
+        public bool ShowSkippedInLog
+        {
+            get { return GetValue<bool>(ShowSkippedInLogProperty); }
+            set 
+            { 
+                SetValue(ShowSkippedInLogProperty, value); 
+                RaisePropertyChanged(() => ActionLog2); 
+            }
+        }
+
+        public static readonly PropertyData ShowFailedInLogProperty = RegisterProperty("ShowFailedInLog", typeof(bool),true);
+
+        public bool ShowFailedInLog
+        {
+            get { return GetValue<bool>(ShowFailedInLogProperty); }
+            set 
+            { 
+                SetValue(ShowFailedInLogProperty, value);
+                RaisePropertyChanged(() => ActionLog2);
+            }
+        }   
 
         public ICommand BrowseSourceCommand
         { get; private set; }

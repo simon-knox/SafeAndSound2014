@@ -9,6 +9,7 @@
     using SKnoxConsulting.SafeAndSound.Gui.Services.Interfaces;
     using System.Collections.ObjectModel;
     using System.Linq;
+    using System.Windows;
 
     /// <summary>
     /// MainWindow view model.
@@ -19,7 +20,8 @@
 
         private readonly IBackupSetService _backupSetService;
         private IUIVisualizerService _uiVisualizerService;
-        private IMessageService _messageService;
+        //private IMessageService _messageService;
+        private IMessageBoxService _messageBoxService;
 
         #endregion
 
@@ -28,15 +30,15 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindowViewModel"/> class.
         /// </summary>
-        public MainWindowViewModel(IBackupSetService backupSetService, IUIVisualizerService uiVisualizerService, IMessageService messageService)
+        public MainWindowViewModel(IBackupSetService backupSetService, IMessageBoxService messageBoxService, IUIVisualizerService uiVisualizerService)
         {
             Argument.IsNotNull(() => backupSetService);
             Argument.IsNotNull(() => uiVisualizerService);
-            Argument.IsNotNull(() => messageService);
+            Argument.IsNotNull(() => messageBoxService);
 
             _backupSetService = backupSetService;
             _uiVisualizerService = uiVisualizerService;
-            _messageService = messageService;
+            _messageBoxService = messageBoxService;
 
             AddBackupSet = new Command(OnAddBackupSetExecute);
             EditBackupSet = new Command(OnEditBackupSetExecute, OnEditBackupSetCanExecute);
@@ -177,8 +179,11 @@
         /// </summary>
         private void OnRemoveBackupSetCollectionExecute()
         {
-            if (_messageService.Show(string.Format("Are you sure you want to delete the BackupSet '{0}'?", SelectedBackupSet),
-                "Are you sure?", MessageButton.YesNo, MessageImage.Question) == MessageResult.Yes)
+            
+
+            //if (_messageService.Show(string.Format("Are you sure you want to delete the BackupSet '{0}'?", SelectedBackupSet),
+             //   "Are you sure?", MessageButton.YesNo, MessageImage.Question) == MessageResult.Yes)
+            if (_messageBoxService.ShowMessage(string.Format("Are you sure you want to delete the BackupSet '{0}'?", SelectedBackupSet.Name), "Delete Backup Set", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 BackupSets.Remove(SelectedBackupSet);
                 SelectedBackupSet = null;

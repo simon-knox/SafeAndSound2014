@@ -1,13 +1,13 @@
 ﻿namespace SKnoxConsulting.SafeAndSound.Gui.Views
 {
     using Catel.Windows;
-
+    using System.Windows.Controls;
     using ViewModels;
 
     /// <summary>
     /// Interaction logic for ExcludedDirectoriesWindow.xaml.
     /// </summary>
-    public partial class ExcludedDirectoriesWindow : DataWindow
+    public partial class ExcludedDirectoriesWindow 
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ExcludedDirectoriesWindow"/> class.
@@ -23,9 +23,10 @@
         /// This constructor can be used to use view-model injection.
         /// </remarks>
         public ExcludedDirectoriesWindow(ExcludedFilesViewModel viewModel)
-            : base(viewModel)
         {
             InitializeComponent();
+            this.Buttons = new Button[] { this.OkButton, this.CancelButton };
+            DataContext = viewModel;
         }
     }
 }

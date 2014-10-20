@@ -45,5 +45,10 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine.BackupActions
             _status = ActionStatus.Complete;
             return true;
         }
+
+        public override string ActionName
+        {
+            get { return "Create Folder"; }
+        }
     }
 }

@@ -3,6 +3,7 @@
     using Catel.Windows;
     using SKnoxConsulting.SafeAndSound.Gui.Controls;
     using SKnoxConsulting.SafeAndSound.Gui.ViewModels;
+    using MahApps.Metro;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml.
@@ -19,7 +20,7 @@
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
-        {
+        {           
             ((MainWindowViewModel)DataContext).SaveAndCloseViewModel();
             base.OnClosing(e);
         }
