@@ -67,6 +67,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngineTests
         }
 
         [Test]
+        [Ignore]
         public void ExecuteFailsOnException()
         {
             var copyFileAction = new CopyFileAction(Path.Combine(_sourceDirectory, "ExceptionFile.txt"), Path.Combine(_destinationDirectory, "ExceptionFile.txt"));
