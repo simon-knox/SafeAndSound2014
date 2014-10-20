@@ -24,10 +24,10 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngineTests
             _destinationDirectory = Path.Combine(location, "CopyFileActionTestsDestination");
             Directory.CreateDirectory(_sourceDirectory);
             Directory.CreateDirectory(_destinationDirectory);
-            File.CreateText(Path.Combine(_sourceDirectory, "FileToCopy.txt"));
+            using (File.CreateText(Path.Combine(_sourceDirectory, "FileToCopy.txt"))) { };
             //File.CreateText(Path.Combine(_sourceDirectory, "ExceptionFile.txt"));
-            File.CreateText(Path.Combine(_sourceDirectory, "FileToCopyAlreadyExists.txt"));
-            File.CreateText(Path.Combine(_destinationDirectory, "FileToCopyAlreadyExists.txt"));        
+            using (File.CreateText(Path.Combine(_sourceDirectory, "FileToCopyAlreadyExists.txt"))) { };
+            using (File.CreateText(Path.Combine(_destinationDirectory, "FileToCopyAlreadyExists.txt"))) { };        
         }
 
         [TestFixtureTearDown]
