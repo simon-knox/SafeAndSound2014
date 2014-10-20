@@ -25,7 +25,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngineTests
             Directory.CreateDirectory(_sourceDirectory);
             Directory.CreateDirectory(_destinationDirectory);
             File.CreateText(Path.Combine(_sourceDirectory, "FileToCopy.txt"));
-            File.CreateText(Path.Combine(_sourceDirectory, "ExceptionFile.txt"));
+            //File.CreateText(Path.Combine(_sourceDirectory, "ExceptionFile.txt"));
             File.CreateText(Path.Combine(_sourceDirectory, "FileToCopyAlreadyExists.txt"));
             File.CreateText(Path.Combine(_destinationDirectory, "FileToCopyAlreadyExists.txt"));        
         }
