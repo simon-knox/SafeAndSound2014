@@ -3,7 +3,6 @@
     using Catel.Windows;
     using SKnoxConsulting.SafeAndSound.Gui.Controls;
     using SKnoxConsulting.SafeAndSound.Gui.ViewModels;
-    using MahApps.Metro;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml.
