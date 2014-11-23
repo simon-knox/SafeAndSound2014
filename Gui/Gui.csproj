@@ -47,6 +47,9 @@
       <HintPath>..\packages\ModernUI.WPF.1.0.6\lib\net45\FirstFloor.ModernUI.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="MahApps.Metro">
       <HintPath>..\packages\MahApps.Metro.0.14.0.0\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
@@ -75,9 +78,17 @@
     </ApplicationDefinition>
     <Compile Include="Services\Interfaces\IMessageBoxService.cs" />
     <Compile Include="Services\MessageBoxService.cs" />
+    <Compile Include="Util\ChangeNotifyingObservableCollection.cs" />
+    <Compile Include="ViewModels\AboutViewModel.cs" />
     <Compile Include="ViewModels\ActionLogItemViewModel.cs" />
+    <Compile Include="Views\AboutDialog.xaml.cs">
+      <DependentUpon>AboutDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\BackupSetDialog.xaml.cs">
       <DependentUpon>BackupSetDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ModernWindow1.xaml.cs">
+      <DependentUpon>ModernWindow1.xaml</DependentUpon>
     </Compile>
     <Page Include="Resources\SafeAndSoundResourceDictionary.xaml">
       <SubType>Designer</SubType>
@@ -91,7 +102,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\BackupSetCollectionView.xaml">
+    <Page Include="ViewModels\BackupSetCollectionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AboutDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -141,7 +156,7 @@
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\BackupSetCollectionWindowViewModel.cs" />
     <Compile Include="ViewModels\DirectoryViewModel.cs" />
-    <Compile Include="Views\BackupSetCollectionView.xaml.cs">
+    <Compile Include="ViewModels\BackupSetCollectionView.xaml.cs">
       <DependentUpon>BackupSetCollectionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\BackupSetsListView.xaml.cs">
@@ -164,6 +179,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\BackupSetDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ModernWindow1.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -5,13 +5,20 @@ using Catel.MVVM;
 using Catel.MVVM.Services;
 using SKnoxConsulting.SafeAndSound.BackupEngine;
 using SKnoxConsulting.SafeAndSound.BackupEngine.BackupActions;
+using SKnoxConsulting.SafeAndSound.Gui.Util;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Markup;
+using System.Windows.Threading;
 
 namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
 {
@@ -19,6 +26,10 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
     {
         private IUIVisualizerService _uiVisualizerService;
         private ChangeNotificationWrapper _totalFileCountChanged;
+        //private ChangeNotifyingObservableCollection<ActionLogItemViewModel> _actionLog2;
+        private ICollectionView _actionLog2View;
+        private ChangeNotifyingObservableCollection<ActionLogItemViewModel> _actionLog2;
+        private Timer _timer;
 
         public BackupSetViewModel(BackupSet backupSet, IUIVisualizerService uiVisualizerService)
         {
@@ -26,6 +37,10 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
             Argument.IsNotNull(() => uiVisualizerService);
             BackupSet = backupSet;
             _uiVisualizerService = uiVisualizerService;
+            _timer = new Timer(new TimerCallback((o)=>
+            {
+                RefreshLog();
+            }), null, Timeout.Infinite, Timeout.Infinite);
 
             BrowseSourceCommand = new Command(() => SourceDirectory = SetDirectory(SourceDirectory, "Select Source Directory"));
             BrowseDestinationCommand = new Command(() => DestinationDirectory = SetDirectory(DestinationDirectory, "Select Destination Directory"));
@@ -42,27 +57,72 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
                         }
                         
                     }
+                    _timer.Change(1000, 1000);
                     BackupSet.RunBackup();
                 }  
                 , () =>   ProcessingStatus == BackupProcessingStatus.NotStarted ||
                                                                                 ProcessingStatus == BackupProcessingStatus.Cancelled ||
                                                                                 ProcessingStatus == BackupProcessingStatus.Finished);
-            CancelBackupCommand = new Command(() => BackupSet.CancelBackup(), ()=>  ProcessingStatus != BackupProcessingStatus.NotStarted &&
+            CancelBackupCommand = new Command(() =>
+                {
+                    _timer.Change(Timeout.Infinite, Timeout.Infinite);
+                    BackupSet.CancelBackup();
+                }
+                , () => ProcessingStatus != BackupProcessingStatus.NotStarted &&
                                                                                     ProcessingStatus != BackupProcessingStatus.Cancelled &&
                                                                                     ProcessingStatus != BackupProcessingStatus.Finished);
 
-            BackupSet.PropertyChanged += BackupSetPropertyChanged;
+            BackupSet.PropertyChanged += BackupSetPropertyChanged;            
+        }
 
-            
+        private void RefreshLog()
+        {
+            if (ActionLog2 != null)
+            {
+                Dispatcher.CurrentDispatcher.Invoke(() =>
+                {
+
+                    //ActionLogView.Refresh();
+                   //trac RaisePropertyChanged(() => ActionLogView);
+                });
+            }            
         }
 
         void BackupSetPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if(e.PropertyName == "Status")
-                RaisePropertyChanged(() => ShowBackupRunDetails);
-            if (e.PropertyName == "ActionLog")
-                RaisePropertyChanged(() => ActionLog2);
-        }        
+            switch (e.PropertyName)
+            {
+                case "Status":
+                {
+                    RaisePropertyChanged(() => ShowBackupRunDetails);
+                    RaisePropertyChanged(() => ActionLog2);                    
+                    return;
+                }
+                case "ProcessingStatus":
+                {
+                    if (ProcessingStatus == BackupProcessingStatus.ActionQueueBuilt)
+                    {
+                        //Task.Factory.StartNew(() =>
+                       // {
+                        ActionLog2 = new ChangeNotifyingObservableCollection<ActionLogItemViewModel>(ActionLog.Select(ba => new ActionLogItemViewModel(ba)));
+                        ActionLogView = (CollectionView)CollectionViewSource.GetDefaultView(ActionLog2);
+                        ActionLogView.Filter = IsToBeShownInLog;
+                        ActionLogView.Refresh();
+                        RaisePropertyChanged(() => ActionLogView);
+
+                           // ActionLog2 = new ChangeNotifyingObservableCollection<ActionLogItemViewModel>(ActionLog.Select(ba => new ActionLogItemViewModel(ba)));
+                        //})
+                       // .ContinueWith((t) =>
+                        //{ 
+                            RaisePropertyChanged(() => ActionLog2);
+                        //}); 
+                    }
+                    return;
+                }
+            }
+        }     
+            
+                    
 
         public static readonly PropertyData BackupSetProperty = RegisterProperty("BackupSet", typeof(BackupSet), null);
         [Model]
@@ -91,39 +151,61 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
         }
 
 
-        public IEnumerable<ActionLogItemViewModel> ActionLog2
+        public CollectionView ActionLogView
+        { get; private set; }
+
+
+
+        public ChangeNotifyingObservableCollection<ActionLogItemViewModel> ActionLog2
         {
             get
             {
-                //IEnumerable<ActionLogItemViewModel> actionLog2 = null;
-                
-                //var t = Task.Run(()=> actionLog2 =  ActionLog.Where(a => (a.Status == ActionStatus.Pending && ShowPendingInLog) ||
-                //                                (a.Status == ActionStatus.Complete && ShowCompleteInLog) ||
-                //                                (a.Status == ActionStatus.Skipped && ShowSkippedInLog) ||
-                //                                (a.Status == ActionStatus.Failed && ShowFailedInLog))
-                //                  .Select(a => new ActionLogItemViewModel(a)));
-                //await Task.
-                //return actionLog2;
+               // return _actionLog2
+                   // .Where(a => (a.Status == ActionStatus.Pending.ToString() && ShowPendingInLog) ||
+                   //                             (a.Status == ActionStatus.Complete.ToString() && ShowCompleteInLog) ||
+                   //                             (a.Status == ActionStatus.Skipped.ToString() && ShowSkippedInLog) ||
+                   //                             (a.Status == ActionStatus.Failed.ToString() && ShowFailedInLog));   
+                //if (_actionLog2 == null)
+                //{
+                //    _actionLog2 = new ObservableCollection<ActionLogItemViewModel>();
 
-                return ActionLog.Where(a => (a.Status == ActionStatus.Pending && ShowPendingInLog) ||
-                                                (a.Status == ActionStatus.Complete && ShowCompleteInLog) ||
-                                                (a.Status == ActionStatus.Skipped && ShowSkippedInLog) ||
-                                                (a.Status == ActionStatus.Failed && ShowFailedInLog))
-                                .Select(a => new ActionLogItemViewModel(a));
-            }              
+                //    _actionLog2View = CollectionViewSource.GetDefaultView(_actionLog2);
+                //    _actionLog2View.Filter = IsToBeShownInLog;
+                //}
+                return _actionLog2;
+
+            }
+            private set
+            { 
+                _actionLog2 = value;
+                RaisePropertyChanged(() => ActionLog2);
+            }
            
+        }
+
+        private bool IsToBeShownInLog(object obj)
+        {
+            var item = obj as ActionLogItemViewModel;
+            if(item != null)
+            {
+                return (item.Status == ActionStatus.Pending.ToString() && ShowPendingInLog) ||
+                    (item.Status == ActionStatus.Complete.ToString() && ShowCompleteInLog) ||
+                    (item.Status == ActionStatus.Skipped.ToString() && ShowSkippedInLog) ||
+                    (item.Status == ActionStatus.Failed.ToString() && ShowFailedInLog); 
+            }
+            return false;
         }
 
         //private async Task<IEnumerable<ActionLogItemViewModel>> FilterActionLog()
         //{
         //    IEnumerable<ActionLogItemViewModel> actionLog2 = null;
-                
-        //    await Task.Run(()=> actionLog2 =  ActionLog.Where(a => (a.Status == ActionStatus.Pending && ShowPendingInLog) ||
+
+        //    await Task.Run(() => actionLog2 = ActionLog.Where(a => (a.Status == ActionStatus.Pending && ShowPendingInLog) ||
         //                                        (a.Status == ActionStatus.Complete && ShowCompleteInLog) ||
         //                                        (a.Status == ActionStatus.Skipped && ShowSkippedInLog) ||
         //                                        (a.Status == ActionStatus.Failed && ShowFailedInLog))
         //                          .Select(a => new ActionLogItemViewModel(a)));
-        //    return;            
+        //    return;
         //}
 
         
@@ -474,7 +556,8 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
             get { return GetValue<bool>(ShowSkippedInLogProperty); }
             set 
             { 
-                SetValue(ShowSkippedInLogProperty, value); 
+                SetValue(ShowSkippedInLogProperty, value);
+                ActionLogView.Refresh();
                 RaisePropertyChanged(() => ActionLog2); 
             }
         }
@@ -487,6 +570,7 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
             set 
             { 
                 SetValue(ShowFailedInLogProperty, value);
+                ActionLogView.Refresh();  
                 RaisePropertyChanged(() => ActionLog2);
             }
         }   
@@ -551,5 +635,9 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
                 DestinationDirectory = driveName.Substring(0,1) +  DestinationDirectory.Substring(DestinationDirectory.IndexOf(':'));
             }
         }
+
+       
+
+        public event NotifyCollectionChangedEventHandler CollectionChanged;
     }
 }

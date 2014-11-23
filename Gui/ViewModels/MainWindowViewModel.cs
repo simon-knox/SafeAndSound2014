@@ -5,11 +5,16 @@
     using Catel.IoC;
     using Catel.MVVM;
     using Catel.MVVM.Services;
+    using log4net;
     using SKnoxConsulting.SafeAndSound.BackupEngine;
     using SKnoxConsulting.SafeAndSound.Gui.Services.Interfaces;
     using System.Collections.ObjectModel;
+    using System.Diagnostics;
+    using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Windows;
+    using System.Windows.Input;
 
     /// <summary>
     /// MainWindow view model.
@@ -22,6 +27,8 @@
         private IUIVisualizerService _uiVisualizerService;
         //private IMessageService _messageService;
         private IMessageBoxService _messageBoxService;
+
+        private static readonly ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         #endregion
 
@@ -36,6 +43,8 @@
             Argument.IsNotNull(() => uiVisualizerService);
             Argument.IsNotNull(() => messageBoxService);
 
+            _log.Info("In MainWindowViewModel constructor");
+
             _backupSetService = backupSetService;
             _uiVisualizerService = uiVisualizerService;
             _messageBoxService = messageBoxService;
@@ -43,10 +52,20 @@
             AddBackupSet = new Command(OnAddBackupSetExecute);
             EditBackupSet = new Command(OnEditBackupSetExecute, OnEditBackupSetCanExecute);
             RemoveBackupSet = new Command(OnRemoveBackupSetCollectionExecute, OnRemoveBackupSetCollectionCanExecute);
+
+            OpenLogDirectoryCommand = new Command(OnShowLogDirectoryCommand);
+            ShowAboutDialogCommand = new Command(() => _uiVisualizerService.ShowDialog(new AboutViewModel()));
+
             Initialize();
         }
 
         #endregion
+
+        public ICommand OpenLogDirectoryCommand
+        { get; private set; }
+
+        public ICommand ShowAboutDialogCommand
+        { get; private set; }
 
         #region Properties
 
@@ -158,6 +177,13 @@
             //var typeFactory = this.GetTypeFactory();
             //var BackupSetViewModel = typeFactory.CreateInstanceWithParametersAndAutoCompletion<DriveSelectionViewModel>();
             //_uiVisualizerService.ShowDialog(BackupSetViewModel);
+        }
+
+        private void OnShowLogDirectoryCommand()
+        {
+            var location = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            //_sourceDirectory = Path.Combine(location, "CopyFileActionTestsSource");
+            Process.Start(location);
         }
 
         /// <summary>

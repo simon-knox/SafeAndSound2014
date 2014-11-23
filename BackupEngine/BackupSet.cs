@@ -12,6 +12,7 @@ using SKnoxConsulting.SafeAndSound.BackupEngine.Events;
 using System.Diagnostics;
 using Catel.Data;
 using Catel.Runtime.Serialization;
+using log4net;
 
 namespace SKnoxConsulting.SafeAndSound.BackupEngine
 {
@@ -108,7 +109,10 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
         private const string STATUS_ACTION_QUEUE_BUILT = "Finshed building Action Queue.";
         private const string STATUS_CANCELLED = "Cancelled.";
         private const string STATUS_FINISHED = "Finished.";
+
+        private static readonly ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         #endregion private members
+
 
         #region constructors
 
@@ -669,6 +673,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
         /// </summary>
         public void RunBackup()
         {
+            _log.Info("Beginning backup");
             ClearProgressCounts();
             _cancelToken = new CancellationTokenSource();
             
@@ -726,6 +731,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
 
         private void BuildActionQueue()
         {
+            _log.Info("Building Action Queue");
             ProcessingStatus = BackupProcessingStatus.BuildingActionQueue;
             //Clear the action Queues
             ActionQueue.Clear();
@@ -734,6 +740,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
 
             if (_cancelToken.IsCancellationRequested)
             {
+                _log.Info("Building Action Queue Cancelled");
                 ProcessingStatus = BackupProcessingStatus.Cancelled;
                 return;
             }
@@ -782,6 +789,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
                     }
                 }
             }
+            _log.Info("Finished Building Action Queue");
             ProcessingStatus = BackupProcessingStatus.ActionQueueBuilt;
         }
 
@@ -800,6 +808,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
             //if (!Directory.Exists(destDirectory))
             if (!destDir.Exists)
             {
+                _log.InfoFormat("Add Create Folder Action to Action Queue: {0}", destDir.FullName);
                 ActionQueue.Enqueue(new CreateFolderAction(destDir.FullName));
                 OnActionAddedToQueue(new EventArgs());
             }
@@ -820,6 +829,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
                         (!IncludeReadOnly && fi.Attributes.ToString().Contains("ReadOnly")) ||
                         (!IncludeSystem && fi.Attributes.ToString().Contains("System")))
                     {
+                        _log.InfoFormat("Add Skip File Action to Action Queue: {0}", fi.FullName);
                         SkipFileActionQueue.Enqueue(new SkipFileAction(fi.FullName));
                         OnActionAddedToQueue(new EventArgs());
                     }
@@ -829,6 +839,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
                         ///TODO: Probably only need copy action
                         if (!File.Exists(destPath))
                         {
+                            _log.InfoFormat("Add Copy File Action to Action Queue: {0} {1}", fi.FullName, destPath);
                             ActionQueue.Enqueue(new CopyFileAction(fi.FullName, destPath));
                             OnActionAddedToQueue(new EventArgs());
                         }
@@ -838,11 +849,13 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
                             if (fi.LastWriteTimeUtc < fiD.LastWriteTimeUtc.AddSeconds(-5) ||
                                 fi.Length != fiD.Length)
                             {
+                                _log.InfoFormat("Add Overwrite File Action to Action Queue: {0}", fi.FullName, destPath);
                                 ActionQueue.Enqueue(new OverwriteFileAction(fi.FullName, destPath));
                                 OnActionAddedToQueue(new EventArgs());
                             }
                             else
                             {
+                                _log.InfoFormat("Add Skip File Action to Action Queue: {0}", fi.FullName);
                                 SkipFileActionQueue.Enqueue(new SkipFileAction(fi.FullName));
                                 OnActionAddedToQueue(new EventArgs());
                             }
@@ -852,8 +865,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(string.Format("{0}: {1} {2}",
-                            "ProcessDirectoryForActions", di.FullName, ex.Message));
+                _log.ErrorFormat("{0}: {1} {2}", "ProcessDirectoryForActions", di.FullName, ex.Message);
             }
         }
 
@@ -916,8 +928,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine(string.Format("{0}: {1} {2}",
-                            "ProcessDestinationDirectoryForPossibleDelete", di.FullName, ex.Message));
+                        _log.ErrorFormat("ProcessDestinationDirectoryForPossibleDelete: {0} {1}", di.FullName, ex.Message);
                     }
                 }
                 else
@@ -938,16 +949,14 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
                         }
                         catch (Exception ex)
                         {
-                            Debug.WriteLine(string.Format("{0}: {1} {2}",
-                            "ProcessDestinationDirectoryForPossibleDelete", di.FullName, ex.Message));
+                            _log.ErrorFormat("ProcessDestinationDirectoryForPossibleDelete: {0} {1}", di.FullName, ex.Message);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(string.Format("{0}: {1} {2}",
-                            "ProcessDestinationDirectoryForPossibleDelete", di.FullName, ex.Message));
+                _log.ErrorFormat("ProcessDestinationDirectoryForPossibleDelete: {0} {1}", di.FullName, ex.Message);
             }
         }
 
@@ -958,6 +967,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
                 ProcessingStatus = BackupProcessingStatus.SkippingFiles;
                 foreach (SkipFileAction sfa in SkipFileActionQueue)
                 {
+                    _log.InfoFormat("{0}: {1}", "Applying Skip File Action", sfa.Path);
                     sfa.Status = ActionStatus.Skipped;
                 }
                 FileSkipCount = SkipFileActionQueue.Count;

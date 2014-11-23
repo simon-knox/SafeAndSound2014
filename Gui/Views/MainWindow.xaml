@@ -12,17 +12,19 @@
     
 
     
+    
     <!-- Content -->
     <mui:ModernWindow.Background>
         <ImageBrush>
             <ImageBrush.ImageSource>
-                <BitmapImage UriSource="/Resources/127Vector.jpg"/>
+                <BitmapImage UriSource="/Resources/BlueVector.jpg" />
             </ImageBrush.ImageSource>
         </ImageBrush>
     </mui:ModernWindow.Background>
 
     <catel:StackGrid>
         <catel:StackGrid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </catel:StackGrid.RowDefinitions>
@@ -30,7 +32,19 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </catel:StackGrid.ColumnDefinitions>
+
+        <Menu Grid.ColumnSpan="2" Margin="200,-20,100,10" Width="Auto" HorizontalAlignment="Right" Panel.ZIndex="0" Background="Transparent">
+            <MenuItem Header="_SETTINGS"  Background="Transparent">
+                <MenuItem Header="_Apperance"/>
+            </MenuItem>
+            <MenuItem Header="_HELP" Background="Transparent">
+                <MenuItem Header="_Open Log Directory" Command="{Binding OpenLogDirectoryCommand}"/>
+                <MenuItem Header="_About" Command="{Binding ShowAboutDialogCommand}"/>                
+            </MenuItem>                    
+        </Menu>
+
         
+
         <views:BackupSetsListView/>
 
         <views:BackupSetView Grid.RowSpan="2"  DataContext="{Binding SelectedBackupSet}" Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type catel:StackGrid}}, 

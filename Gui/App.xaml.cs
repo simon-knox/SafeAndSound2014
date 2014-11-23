@@ -1,15 +1,19 @@
-﻿namespace SKnoxConsulting.SafeAndSound.Gui
-{
-    using System.Windows;
+﻿using System.Windows;
 
-    using Catel.Windows;
-    using Catel.IoC;
-    using SKnoxConsulting.SafeAndSound.Gui.Services.Interfaces;
-    using SKnoxConsulting.SafeAndSound.Gui.Services;
-    using Catel.MVVM.Services;
-    using SKnoxConsulting.SafeAndSound.Gui.ViewModels;
-    using SKnoxConsulting.SafeAndSound.Gui.Views;
-    using Gui.Views;
+using Catel.Windows;
+using Catel.IoC;
+using SKnoxConsulting.SafeAndSound.Gui.Services.Interfaces;
+using SKnoxConsulting.SafeAndSound.Gui.Services;
+using Catel.MVVM.Services;
+using SKnoxConsulting.SafeAndSound.Gui.ViewModels;
+using SKnoxConsulting.SafeAndSound.Gui.Views;
+using log4net;
+using System.Windows.Threading;
+
+[assembly: log4net.Config.XmlConfigurator(Watch = true)]
+
+namespace SKnoxConsulting.SafeAndSound.Gui
+{    
 
     /// <summary>
     /// Interaction logic for App.xaml
@@ -18,6 +22,12 @@
     {
         private IServiceLocator _serviceLocator;
 
+        private string _versionNumber;
+
+        private static readonly ILog _log = LogManager.GetLogger (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType) ;
+        //private static readonly ILog log = LogManager.GetLogger(typeof (Program)) ;
+        
+
 
         /// <summary>
         /// Raises the <see cref="E:System.Windows.Application.Startup"/> event.
@@ -25,9 +35,14 @@
         /// <param name="e">A <see cref="T:System.Windows.StartupEventArgs"/> that contains the event data.</param>
         protected override void OnStartup(StartupEventArgs e)
         {
+            _versionNumber = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            _log.InfoFormat("Starting Safe and Sound 2014 version {0}", _versionNumber);
+
+
             base.OnStartup(e);
 #if DEBUG
             Catel.Logging.LogManager.RegisterDebugListener();
+           
 #endif
 
             StyleHelper.CreateStyleForwardersForDefaultStyles();
@@ -38,11 +53,15 @@
             _serviceLocator = ServiceLocator.Default;
             _serviceLocator.RegisterType<IBackupSetService, BackupSetService>();
             _serviceLocator.RegisterType<IMessageBoxService, MessageBoxService>();
+            _serviceLocator.RegisterInstance<ILog>(_log);
+            var test = _serviceLocator.GetService(typeof(ILog));
+            //test.l
 
             var uiVisualizerService = _serviceLocator.ResolveType<IUIVisualizerService>();
             uiVisualizerService.Register(typeof(BackupSetViewModel), typeof(BackupSetDialog));
             uiVisualizerService.Register(typeof(ExcludedFilesViewModel), typeof(ExcludedDirectoriesWindow));
             uiVisualizerService.Register(typeof(DriveSelectionViewModel), typeof(DriveSelectionWindow));
+            uiVisualizerService.Register(typeof(AboutViewModel), typeof(AboutDialog));
 
             
 
@@ -59,6 +78,28 @@
 
 
             
-        }       
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            base.OnExit(e);
+            _log.InfoFormat("Exiting Safe and Sound 2014 version {0}", _versionNumber);
+        }
+
+        
+        void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            // Process unhandled exception
+            _log.FatalFormat("{0} {1}", e.Exception.Message, e.Exception.InnerException.Message);
+            MessageBox.Show(e.Exception.Message);
+
+
+
+
+
+            // Prevent default unhandled exception processing
+
+        }
+        
     }
 }

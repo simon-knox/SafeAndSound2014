@@ -15,6 +15,12 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
         public ActionLogItemViewModel(BackupAction backupAction)
         {
             _backupAction = backupAction;
+            _backupAction.PropertyChanged += BackupActionPropertyChanged;
+        }
+
+        void BackupActionPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            RaisePropertyChanged(()=>e.PropertyName);
         }
 
         public string Status

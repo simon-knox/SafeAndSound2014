@@ -10,9 +10,9 @@ using System.Windows;
 [assembly: AssemblyTitle("SKnoxConsulting.SafeAndSound.Gui")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("S Knox Consulting Limited")]
 [assembly: AssemblyProduct("SKnoxConsulting.SafeAndSound.Gui")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyCopyright("Copyright ©  2014 S Knox Consulting Limited")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

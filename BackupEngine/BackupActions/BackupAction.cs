@@ -1,8 +1,9 @@
-﻿namespace SKnoxConsulting.SafeAndSound.BackupEngine.BackupActions
+﻿using Catel.Data;
+namespace SKnoxConsulting.SafeAndSound.BackupEngine.BackupActions
 {
     ///<summary>
     ///</summary>
-    public abstract class BackupAction
+    public abstract class BackupAction : ModelBase
     {
         private string _errorMessage;
 
@@ -31,6 +32,7 @@
             set
             {
                 _status = value;
+                RaisePropertyChanged(() => Status);
             }
         }
 
