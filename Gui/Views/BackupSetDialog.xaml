@@ -1,10 +1,12 @@
-﻿<mui:ModernDialog x:Class="SKnoxConsulting.SafeAndSound.Gui.Views.BackupSetDialog"
+﻿<controls:SafeAndSoundDialog x:Class="SKnoxConsulting.SafeAndSound.Gui.Views.BackupSetDialog"
                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                  xmlns:backupEngine="clr-namespace:SKnoxConsulting.SafeAndSound.BackupEngine;assembly=SKnoxConsulting.SafeAndSound.BackupEngine"
                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
                   xmlns:mui="http://firstfloorsoftware.com/ModernUI"
                   xmlns:catel="http://catel.codeplex.com"
+                  xmlns:controls="clr-namespace:SKnoxConsulting.SafeAndSound.Gui.Controls"
                   mc:Ignorable="d" 
                   d:DesignHeight="300" d:DesignWidth="600"
 
@@ -14,6 +16,7 @@
 
     <catel:StackGrid>
         <catel:StackGrid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -38,6 +41,14 @@
         <Label Margin="0,7,0,0" Content="Destination directory"/>
         <TextBox Margin="7,7,0,0" Text="{Binding Path=DestinationDirectory, UpdateSourceTrigger=PropertyChanged}"/>
         <Button HorizontalAlignment="Right" Margin="7,7,0,0" Width="25" Command="{Binding BrowseDestinationCommand}" VerticalAlignment="Bottom" >...</Button>
+
+        <Label Margin="0,7,0,0" Content="Frequency"/>
+        <ComboBox Margin="7,7,0,0" HorizontalAlignment="Stretch" 
+                  ItemsSource="{Binding Source={backupEngine:Enumeration { x:Type backupEngine:RunInterval}}}"
+                  DisplayMemberPath="Description" 
+                  SelectedValuePath="Value"
+                  SelectedValue="{Binding BackupFrequency}"/> 
+        <catel:EmptyCell/>
 
         <catel:EmptyColumn/>
         <TextBlock Margin="7,7,0,0" Grid.ColumnSpan="2">
@@ -69,4 +80,4 @@
         </catel:StackGrid>        
     </catel:StackGrid>
 
-</mui:ModernDialog>
+</controls:SafeAndSoundDialog>

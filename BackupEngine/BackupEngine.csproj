@@ -42,6 +42,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -61,12 +62,16 @@
     <Compile Include="BackupSet.cs" />
     <Compile Include="BackupSetCollection.cs" />
     <Compile Include="DirectoryModel.cs" />
+    <Compile Include="EnumerationExtension.cs" />
+    <Compile Include="EnumerationMember.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Events\DriveUnavaliableEventArgs.cs" />
     <Compile Include="Events\SourceRootNotFoundEventArgs.cs" />
     <Compile Include="GlobalSettings.cs" />
+    <Compile Include="IBackupSet.cs" />
     <Compile Include="IOHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RunSchedule.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

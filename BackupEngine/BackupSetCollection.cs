@@ -18,14 +18,14 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
     {
         #region public properties
 
-        public static readonly PropertyData BackupSetsProperty = RegisterProperty("BackupSets", typeof(ObservableCollection<BackupSet>), () => new ObservableCollection<BackupSet>());
+        public static readonly PropertyData BackupSetsProperty = RegisterProperty("BackupSets", typeof(ObservableCollection<IBackupSet>), () => new ObservableCollection<IBackupSet>());
 
         ///<summary>
         /// The list of BackupSetCollection
         ///</summary>
-        public ObservableCollection<BackupSet> BackupSets
+        public ObservableCollection<IBackupSet> BackupSets
         {
-            get { return GetValue<ObservableCollection<BackupSet>>(BackupSetsProperty); }
+            get { return GetValue<ObservableCollection<IBackupSet>>(BackupSetsProperty); }
             private set { SetValue(BackupSetsProperty, value); }
         }
 
@@ -38,7 +38,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
         {
             get { return GetValue<DateTime>(SaveTimeProperty); }
             set { SetValue(SaveTimeProperty, value); }
-        }       
+        }
 
         #endregion public properties
 

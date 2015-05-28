@@ -1,0 +1,23 @@
+﻿<mahApps:MetroWindow x:Class="SKnoxConsulting.SafeAndSound.Gui.Views.DialogView"
+                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+                  xmlns:catel="http://catel.codeplex.com"
+                  xmlns:converters="clr-namespace:Catel.Windows.Data.Converters;assembly=Catel.Extensions.Controls"
+                  xmlns:views="clr-namespace:SKnoxConsulting.SafeAndSound.Gui.Views"
+                  xmlns:controls="clr-namespace:SKnoxConsulting.SafeAndSound.Gui.Controls"  
+                  xmlns:mahApps="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"          
+                  Title="DialogView" Height="300" Width="300">
+    <Grid Margin="11">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <ContentControl Content="{Binding DialogContent}"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button IsDefault="{Binding Button1IsDefault}" IsCancel="{Binding IsButton1Cancel}" Command="{Binding Button1Command}" Content="{Binding Button1Content}"/>
+            <Button Margin="0,7,0,0" IsDefault="{Binding Button2IsDefault}" IsCancel="{Binding IsButton2Cancel}" Command="{Binding Button2Command}" Content="{Binding Button2Content}"/>
+            <Button Margin="0,7,0,0" IsDefault="{Binding Button3IsDefault}" IsCancel="{Binding IsButton3Cancel}" Command="{Binding Button3Command}" Content="{Binding Button3Content}"/>
+        </StackPanel>
+        
+    </Grid>
+</mahApps:MetroWindow>

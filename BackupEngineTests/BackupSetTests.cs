@@ -9,12 +9,11 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngineTests
     public class BackupSetTests
     {
         [Test]
-        [Ignore]
         public void RunBackupTest()
         {
             try
             {
-                var bs = new BackupSet("TEST", @"D:\TestData", @"D:\TestData2");
+                var bs = new BackupSet("TEST", @"C:\Test1", @"C:\Test3");
                 Assert.IsTrue(bs.Status == "Ready.");
                 bs.RunBackup();
 
@@ -29,6 +28,13 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngineTests
             {
                 Assert.Fail(ex.Message);
             }
+        }
+
+        [Test]
+        public void CreatesWithDefaults()
+        {
+            BackupSet bs = new BackupSet("TEST");
+            Assert.IsTrue(bs.Name == "TEST");
         }
     }
 }

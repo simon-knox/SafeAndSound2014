@@ -9,7 +9,7 @@ namespace SKnoxConsulting.SafeAndSound.Gui.Services.Interfaces
 {
     public interface IBackupSetService
     {
-        IEnumerable<BackupSet> LoadBackupSets();
-        void SaveBackupSets(IEnumerable<BackupSet> backupSets);
+        IEnumerable<IBackupSet> LoadBackupSets();
+        void SaveBackupSets(IEnumerable<IBackupSet> backupSets);
     }
 }

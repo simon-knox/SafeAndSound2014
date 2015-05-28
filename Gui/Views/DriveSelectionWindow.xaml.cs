@@ -27,8 +27,9 @@ namespace SKnoxConsulting.SafeAndSound.Gui.Views
         public DriveSelectionWindow(DriveSelectionViewModel viewModel)
         {
             InitializeComponent();
+
             Buttons = new Button[] { OkButton, CancelButton };
             DataContext = viewModel;
-        }
+        }        
     }
 }

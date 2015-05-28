@@ -4,27 +4,43 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="200">
-    <Border BorderBrush="{StaticResource WindowBorder}" BorderThickness="1" Margin="11,0,0,11" VerticalAlignment="Stretch">
-        <Grid Margin="7">
+             d:DesignHeight="300" d:DesignWidth="250">
+    <Border BorderBrush="{StaticResource WindowBorder}" Width="250" BorderThickness="1" Margin="11,0,0,11" VerticalAlignment="Stretch">
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <TextBlock Style="{StaticResource Title}">Backup Sets</TextBlock>
-            <ListBox Grid.Row="1" Margin="0,7,0,0" ItemsSource="{Binding BackupSets}" SelectedItem="{Binding SelectedBackupSet}">
+            <StackPanel Background="{DynamicResource Accent}" Orientation="Horizontal">
+                <TextBlock Margin="5,0,0,0" Style="{DynamicResource TitleWithBackgroundStyle}" >Backup Sets</TextBlock>                
+            </StackPanel>
+            
+            <ListBox Grid.Row="1" Margin="5" ItemsSource="{Binding BackupSets}" SelectedItem="{Binding SelectedBackupSet}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock DataContext="{Binding}" Text="{Binding Name}"/>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <StackPanel Grid.Row="2">
-                <Button Margin="0,7,0,0" Width="186" Command="{Binding AddBackupSet}" Content="Add Backup Set" />
-                <Button Margin="0,7,0,0" Width="186" Command="{Binding EditBackupSet}" Content="Edit Backup Set" />
-                <Button Margin="0,7,0,7" Width="186" Command="{Binding RemoveBackupSet}" Content="Remove Backup Set" />
+            <Border Grid.Row="2" Background="{DynamicResource Accent}" HorizontalAlignment="Stretch">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">                
+               <Button Height="32" Width="32" HorizontalAlignment="Right" ToolTip="Add Backup" Command="{Binding AddBackupSet}">
+                    <Button.Template>
+                        <ControlTemplate>
+                            <Image Source="..\Resources\appbar.new.png"/>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <Button Margin="5,0,5,0" Height="32" Width="32" HorizontalAlignment="Right" ToolTip="Delete Backup" Command="{Binding RemoveBackupSet}">
+                    <Button.Template>
+                        <ControlTemplate>
+                            <Image Source="..\Resources\appbar.delete.png"/>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
             </StackPanel>
+            </Border>
         </Grid>
     </Border>
 </UserControl>

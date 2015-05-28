@@ -1,8 +1,9 @@
-﻿<mui:ModernDialog x:Class="SKnoxConsulting.SafeAndSound.Gui.Views.DriveSelectionWindow"
+﻿<controls:SafeAndSoundDialog x:Class="SKnoxConsulting.SafeAndSound.Gui.Views.DriveSelectionWindow"
                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 				  xmlns:catel="http://catel.codeplex.com"
                   xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+                  xmlns:controls="clr-namespace:SKnoxConsulting.SafeAndSound.Gui.Controls"
                   Title="External Drive Location">
 
         <catel:StackGrid>
@@ -45,5 +46,5 @@
                 </ListBox.ItemTemplate>
             </ListBox>            
         </catel:StackGrid>
-</mui:ModernDialog>
+</controls:SafeAndSoundDialog>
 

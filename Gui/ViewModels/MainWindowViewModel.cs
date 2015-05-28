@@ -1,32 +1,41 @@
-﻿namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
-{
-    using Catel;
-    using Catel.Data;
-    using Catel.IoC;
-    using Catel.MVVM;
-    using Catel.MVVM.Services;
-    using log4net;
-    using SKnoxConsulting.SafeAndSound.BackupEngine;
-    using SKnoxConsulting.SafeAndSound.Gui.Services.Interfaces;
-    using System.Collections.ObjectModel;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Windows;
-    using System.Windows.Input;
+﻿using Catel;
+using Catel.Data;
+using Catel.IoC;
+using Catel.MVVM;
+using Catel.MVVM.Services;
+using log4net;
+using SKnoxConsulting.SafeAndSound.BackupEngine;
+using SKnoxConsulting.SafeAndSound.Gui.Services;
+using SKnoxConsulting.SafeAndSound.Gui.Services.Interfaces;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Windows;
+using System.Windows.Data;
+using System.Windows.Input;
+
+namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
+{  
+
+    public delegate void ThemeChangedEventHandler(object sender, ThemeChangedEventArgs e);
+
 
     /// <summary>
     /// MainWindow view model.
     /// </summary>
     public class MainWindowViewModel : ViewModelBase
     {
+        private const string OVERDUE = "OVERDUE";
+        private const string ERROR = "ERROR";
+
         #region Fields
 
         private readonly IBackupSetService _backupSetService;
         private IUIVisualizerService _uiVisualizerService;
-        //private IMessageService _messageService;
-        private IMessageBoxService _messageBoxService;
+        private IMessageBoxService _messageBoxService; 
 
         private static readonly ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -49,25 +58,64 @@
             _uiVisualizerService = uiVisualizerService;
             _messageBoxService = messageBoxService;
 
+            ServiceSettings = new ServiceViewModel();
+
+            Themes = new[] { "Dark", "Light" };
+            CurrentThemeNumber = 0;
+
             AddBackupSet = new Command(OnAddBackupSetExecute);
             EditBackupSet = new Command(OnEditBackupSetExecute, OnEditBackupSetCanExecute);
             RemoveBackupSet = new Command(OnRemoveBackupSetCollectionExecute, OnRemoveBackupSetCollectionCanExecute);
 
             OpenLogDirectoryCommand = new Command(OnShowLogDirectoryCommand);
             ShowAboutDialogCommand = new Command(() => _uiVisualizerService.ShowDialog(new AboutViewModel()));
+            ToggleThemeCommand = new Command(() =>
+                                                    {
+                                                        CurrentThemeNumber++;
+                                                        if(CurrentThemeNumber > Themes.Length - 1)
+                                                        {
+                                                            CurrentThemeNumber = 0;
+                                                        }
+                                                        RaiseThemeChanged(Themes[CurrentThemeNumber]);
+                                                    });
+            FilterAllBackupsCommand = new Command(() => FilterBackupSets());
+            FilterOverdueBackupsCommand = new Command(() => FilterBackupSets(OVERDUE));
+            FilterErrorBackupsCommand = new Command(() => FilterBackupSets(ERROR));
+
+        
 
             Initialize();
         }
 
         #endregion
 
+        public event ThemeChangedEventHandler OnThemeChanged;
+        
         public ICommand OpenLogDirectoryCommand
         { get; private set; }
 
         public ICommand ShowAboutDialogCommand
         { get; private set; }
 
+        public ICommand ToggleThemeCommand
+        { get; private set; }
+
+        public ICommand FilterAllBackupsCommand
+        { get; private set; }
+
+        public ICommand FilterOverdueBackupsCommand
+        { get; private set; }
+
+        public ICommand FilterErrorBackupsCommand
+        { get; private set; }
+
         #region Properties
+
+        public int CurrentThemeNumber
+        { get; private set; }
+
+        public string[] Themes
+        { get; private set; }
 
         /// <summary>
         /// Gets or sets the selected BackupSet.
@@ -85,7 +133,10 @@
         public bool IsBackupSetSelected
         {
             get { return SelectedBackupSet != null; }
-        }            
+        }
+
+        public ICollectionView BackupSetsView
+        { get; private set; }
 
         /// <summary>
         /// Register the SelectedBackupSet property so it is known in the class.
@@ -99,7 +150,7 @@
         /// Gets the title of the view model.
         /// </summary>
         /// <value>The title.</value>
-        public override string Title { get { return "Safe and Sound Backup 2014"; } }
+        public override string Title { get { return "Safe and Sound Backup 2015"; } }
 
         // TODO: Register models with the vmpropmodel codesnippet
         // TODO: Register view model properties with the vmprop or vmpropviewmodeltomodel codesnippets
@@ -112,11 +163,14 @@
             get { return GetValue<ObservableCollection<BackupSetViewModel>>(BackupSetsProperty); }
             set { SetValue(BackupSetsProperty, value); }
         }
-
         /// <summary>
         /// Register the name property so it is known in the class.
         /// </summary>
         public static readonly PropertyData BackupSetsProperty = RegisterProperty("BackupSets", typeof(ObservableCollection<BackupSetViewModel>), null);
+
+
+        public ServiceViewModel ServiceSettings
+        { get; set; }
 
 
         #endregion
@@ -139,8 +193,6 @@
             var typeFactory = this.GetTypeFactory();
             var backupSetViewModel = typeFactory.CreateInstanceWithParametersAndAutoCompletion<BackupSetViewModel>(new BackupSet());
 
-
-
             //var BackupSetCollectionViewModel = typeFactory.CreateInstanceWithParametersAndAutoCompletion<BackupSetViewModel>(BackupSetViewModel);
             if (_uiVisualizerService.ShowDialog(backupSetViewModel) ?? false)
             {
@@ -152,6 +204,56 @@
         /// Gets the EditBackupSet command.
         /// </summary>
         public Command EditBackupSet { get; private set; }
+
+        private void FilterBackupSets(string filter = "")
+        {
+            BackupSetsView = (CollectionView)CollectionViewSource.GetDefaultView(BackupSets);
+            switch(filter)
+            {
+                case ERROR:
+                    BackupSetsView.Filter = BackupSetsErrorFilter;
+                    break;
+                case OVERDUE:
+                    BackupSetsView.Filter = BackupSetsOverdueFilter;
+                    break;
+                default:
+                    BackupSetsView.Filter = BackupSetsNoFilter;
+                    break;
+            }      
+            BackupSetsView.Refresh();
+            RaisePropertyChanged(() => BackupSetsView);
+        }
+
+        private bool BackupSetsOverdueFilter(object obj)
+        {
+            var item = obj as BackupSetViewModel;
+            if (item != null)
+            {
+                return (item.ScheduleStatus == Models.BackupSetScheduleStatus.NeverRun ||
+                    item.ScheduleStatus == Models.BackupSetScheduleStatus.Overdue );
+            }
+            return false;
+        }
+
+        private bool BackupSetsNoFilter(object obj)
+        {
+            var item = obj as BackupSetViewModel;
+            if (item != null)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private bool BackupSetsErrorFilter(object obj)
+        {
+            var item = obj as BackupSetViewModel;
+            if (item != null)
+            {
+                return (item.ScheduleStatus == Models.BackupSetScheduleStatus.LastRunHadErrors);
+            }
+            return false;
+        }
 
         /// <summary>
         /// Method to check whether the EditBackupSet command can be executed.
@@ -223,7 +325,9 @@
         protected override void Initialize()
         {
             var backupSets = _backupSetService.LoadBackupSets();
-            BackupSets = new ObservableCollection<BackupSetViewModel>(backupSets.Select(bs => new BackupSetViewModel(bs, _uiVisualizerService)));
+            BackupSets = new ObservableCollection<BackupSetViewModel>(backupSets.OrderBy(b=>b.Name)
+                .Select(bs => new BackupSetViewModel(bs, _uiVisualizerService)));
+            FilterBackupSets();
         }
 
         protected override void OnClosing()
@@ -233,6 +337,28 @@
             base.OnClosing();
         }
 
+        private void RaiseThemeChanged(string themeName)
+        {
+            if(OnThemeChanged != null)
+            {
+                OnThemeChanged(this, new ThemeChangedEventArgs(themeName));
+            }
+        }
+
         #endregion
+    }
+
+    public class ThemeChangedEventArgs
+    {
+        public ThemeChangedEventArgs(string themeName)
+        {
+            ThemeName = themeName;
+        }
+
+        public string ThemeName
+        {
+            get;
+            private set;
+        }
     }
 }

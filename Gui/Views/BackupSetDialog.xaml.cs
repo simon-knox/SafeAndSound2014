@@ -19,7 +19,7 @@ namespace SKnoxConsulting.SafeAndSound.Gui.Views
     /// <summary>
     /// Interaction logic for ModernDialog1.xaml
     /// </summary>
-    public partial class BackupSetDialog : ModernDialog
+    public partial class BackupSetDialog 
     {
         public BackupSetDialog()
         {

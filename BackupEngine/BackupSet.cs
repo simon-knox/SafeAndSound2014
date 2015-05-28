@@ -17,7 +17,7 @@ using log4net;
 namespace SKnoxConsulting.SafeAndSound.BackupEngine
 {
     [Serializable]
-    public class BackupSet : SavableModelBase<BackupSet>
+    public class BackupSet : SavableModelBase<BackupSet>, IBackupSet
     {
         #region public delegates
 
@@ -106,7 +106,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
         private const string STATUS_COUNTING_FILES = "Counting files ...";
         private const string STATUS_FILES_COUNTED = "Finished counting files.";
         private const string STATUS_BUILDING_ACTION_QUEUE = "Building Action Queue ...";
-        private const string STATUS_ACTION_QUEUE_BUILT = "Finshed building Action Queue.";
+        private const string STATUS_ACTION_QUEUE_BUILT = "Finished building Action Queue.";
         private const string STATUS_CANCELLED = "Cancelled.";
         private const string STATUS_FINISHED = "Finished.";
 
@@ -149,7 +149,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
 
         public BackupSet()
         {
-           // int i = 0;
+            int i = 0;
         }
 
         ///// <summary>
@@ -232,10 +232,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
             get
             {
                 return ActionQueue.Union(SkipFileActionQueue).Union(DeleteActionStack);
-                
-                //GetValue<IEnumerable<BackupAction>>(ActionLogProperty);
             }
-
         }
 
         public static readonly PropertyData ExcludedDirectoriesProperty = RegisterProperty("ExcludedDirectories", typeof(HashSet<string>), () => new HashSet<string>());
@@ -246,8 +243,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
         {
             get { return GetValue<HashSet<string>>(ExcludedDirectoriesProperty); }
             set { SetValue(ExcludedDirectoriesProperty, value); }
-        }
-
+        } 
 
         public static readonly PropertyData DestinationDirectoryProperty = RegisterProperty("DestinationDirectory", typeof(string), string.Empty);
         ///<summary>
@@ -328,6 +324,43 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
             get { return GetValue<bool>(RemoveDeletedProperty); }
             set { SetValue(RemoveDeletedProperty, value); }
         }
+
+        public static readonly PropertyData BackupFrequencyProperty = RegisterProperty("BackupFrequency", typeof(RunInterval), RunInterval.Daily);
+
+        public RunInterval BackupFrequency
+        {
+            get { return GetValue<RunInterval>(BackupFrequencyProperty); }
+            set { SetValue(BackupFrequencyProperty, value); }
+        }        
+
+        public static readonly PropertyData LastRunTimeProperty = RegisterProperty("LastRunTime", typeof(DateTime));
+
+        public DateTime LastRunTime 
+        {
+            get { return GetValue<DateTime>(LastRunTimeProperty); }
+            set { SetValue(LastRunTimeProperty, value); }
+        }
+
+        [ExcludeFromSerialization]
+        public bool IsOverdue
+        {
+            get
+            {
+                return DateTime.Now > LastRunTime + GetTimeSpanForRunInterval(BackupFrequency);
+            }
+        }
+
+        public TimeSpan CustomFrequency
+        { get; set; }
+
+
+        //public static readonly PropertyData BackupScheduleProperty = RegisterProperty("BackupSchedule", typeof(RunSchedule), ()=> new RunSchedule(this,);
+
+        //public RunSchedule BackupSchedule
+        //{
+        //    get { return GetValue<RunSchedule>(BackupScheduleProperty); }
+        //    set { SetValue(BackupScheduleProperty, value); }
+        //}
 
         public static readonly PropertyData ProcessingStatusProperty = RegisterProperty("ProcessingStatus", typeof(BackupProcessingStatus), BackupProcessingStatus.NotStarted);
         /// <summary>
@@ -676,6 +709,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
             _log.Info("Beginning backup");
             ClearProgressCounts();
             _cancelToken = new CancellationTokenSource();
+            LastRunTime = DateTime.Now;
             
             Task.Factory.StartNew(() =>
             {
@@ -919,7 +953,9 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
             try
             {
                 //Delete the destination directory if it doesn't exist at the source
-                if (!Directory.Exists(srcDirectory))
+                // or if the directory is in the ignore list but is present at the destination
+                if (!Directory.Exists(srcDirectory) ||
+                    ExcludedDirectories.Contains(srcDirectory))
                 {
                     try
                     {
@@ -1022,6 +1058,7 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
             FileOverwriteCount = 0;
             FileSkipCount = 0;
             ErrorCount = 0;
+            TotalFileCount = 0;
         }
 
 
@@ -1042,7 +1079,28 @@ namespace SKnoxConsulting.SafeAndSound.BackupEngine
             return string.Empty;
         }
 
-        #endregion private methods
+        private TimeSpan GetTimeSpanForRunInterval(RunInterval interval)
+        {
+            switch (interval)
+            {
+                case RunInterval.Custom:
+                    return CustomFrequency;
+                case RunInterval.QuarterHourly:
+                    return new TimeSpan(0, 15, 0);
+                case RunInterval.HalfHourly:
+                    return new TimeSpan(0, 30, 0);
+                case RunInterval.Hourly:
+                    return new TimeSpan(1, 0, 0);
+                case RunInterval.Daily:
+                    return new TimeSpan(1, 0, 0, 0);
+                case RunInterval.Weekly:
+                    return new TimeSpan(7, 0, 0, 0);
+                case RunInterval.Monthly:
+                    return DateTime.Now - DateTime.Now.AddMonths(-1);
+            }
+            return new TimeSpan();
+        }
 
+        #endregion private methods   
     }
 }

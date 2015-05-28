@@ -1,26 +1,26 @@
-﻿<mui:ModernWindow x:Class="SKnoxConsulting.SafeAndSound.Gui.Views.MainWindow"
+﻿<mahApps:MetroWindow x:Class="SKnoxConsulting.SafeAndSound.Gui.Views.MainWindow"
                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 				  xmlns:catel="http://catel.codeplex.com"
                   xmlns:converters="clr-namespace:Catel.Windows.Data.Converters;assembly=Catel.Extensions.Controls"
                   xmlns:views="clr-namespace:SKnoxConsulting.SafeAndSound.Gui.Views"
                   xmlns:controls="clr-namespace:SKnoxConsulting.SafeAndSound.Gui.Controls"  
+                     xmlns:Controls2="clr-namespace:MahApps.Metro.Controls"
+                     
+                  xmlns:mahApps="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                   xmlns:mui="http://firstfloorsoftware.com/ModernUI"
-                  Title="Safe and Sound 2014"  
+                  Title="Safe and Sound 2015"  
                   ShowInTaskbar="True" SizeToContent="Manual" WindowStartupLocation="Manual" WindowState="Maximized" 
-                  Style="{StaticResource BlankWindow}">
-    
-
-    
-    
+                  Icon="/SKnoxConsulting.SafeAndSound.Gui;component/Resources/SafeAndSound.ico">  
+       <!--Style="{DynamicResource BlankWindow}"--> 
     <!-- Content -->
-    <mui:ModernWindow.Background>
+    <!--<mui:ModernWindow.Background>
         <ImageBrush>
             <ImageBrush.ImageSource>
                 <BitmapImage UriSource="/Resources/BlueVector.jpg" />
             </ImageBrush.ImageSource>
         </ImageBrush>
-    </mui:ModernWindow.Background>
+    </mui:ModernWindow.Background>-->
 
     <catel:StackGrid>
         <catel:StackGrid.RowDefinitions>
@@ -33,9 +33,13 @@
             <ColumnDefinition Width="*" />
         </catel:StackGrid.ColumnDefinitions>
 
-        <Menu Grid.ColumnSpan="2" Margin="200,-20,100,10" Width="Auto" HorizontalAlignment="Right" Panel.ZIndex="0" Background="Transparent">
+        <!--Margin="200,-20,100,10"-->
+
+        <Menu Grid.ColumnSpan="2" Margin="0,0,10,0"
+              Width="Auto" HorizontalAlignment="Right" Panel.ZIndex="0" Background="Transparent">
             <MenuItem Header="_SETTINGS"  Background="Transparent">
-                <MenuItem Header="_Apperance"/>
+                <MenuItem Header="_Appearance"/>
+                <MenuItem Header="_Toggle Theme" Command="{Binding ToggleThemeCommand}"/>
             </MenuItem>
             <MenuItem Header="_HELP" Background="Transparent">
                 <MenuItem Header="_Open Log Directory" Command="{Binding OpenLogDirectoryCommand}"/>
@@ -43,13 +47,35 @@
             </MenuItem>                    
         </Menu>
 
+        <!---->
+
+        <mahApps:MetroAnimatedSingleRowTabControl Grid.ColumnSpan="2" Background="Transparent" 
+                                                  Style="{DynamicResource MetroAnimatedSingleRowTabControlDownStyle}">
+            <TabItem Header="Overview">
+                <views:BackupSetsOverviewView/>         
+            </TabItem>
+            <TabItem Header="Backups">
+                <DockPanel>
+                <views:BackupSetsListView/>
+                <views:BackupSetView Grid.RowSpan="2"  DataContext="{Binding SelectedBackupSet}" 
+                             Visibility="{Binding RelativeSource={RelativeSource FindAncestor,
+                                            AncestorType={x:Type catel:StackGrid}},
+                                            Path=DataContext.IsBackupSetSelected,
+                                            Converter={StaticResource BoolToCollapsingVisibilityConverter}}"/>
+                    </DockPanel>
+            </TabItem>
+            <TabItem Header="Schedule">
+                <DockPanel>
+                    <views:ScheduleView/>
+                </DockPanel>
+
+            </TabItem>
+            <TabItem Header="Service">
+                <DockPanel>
+                    <views:ServiceView DataContext="{Binding ServiceSettings}"/>                    
+                </DockPanel>
+            </TabItem>
+        </mahApps:MetroAnimatedSingleRowTabControl>
         
-
-        <views:BackupSetsListView/>
-
-        <views:BackupSetView Grid.RowSpan="2"  DataContext="{Binding SelectedBackupSet}" Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type catel:StackGrid}}, 
-Path=DataContext.IsBackupSetSelected, Converter={StaticResource BoolToCollapsingVisibilityConverter}}"/>
-
-        
-    </catel:StackGrid>
-</mui:ModernWindow>
+    </catel:StackGrid>   
+</mahApps:MetroWindow>

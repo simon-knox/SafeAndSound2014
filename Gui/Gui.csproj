@@ -76,20 +76,70 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\FlipControl.xaml.cs">
+      <DependentUpon>FlipControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FlipPanel.cs" />
+    <Compile Include="Controls\SafeAndSoundDialog.cs" />
+    <Compile Include="Converters\BackupDestinationTypeToStringConverter.cs" />
+    <Compile Include="Converters\BoolToYesNoConverter.cs" />
+    <Compile Include="Converters\DueRunTimeConverter.cs" />
+    <Compile Include="Converters\LastRunTimeConverter.cs" />
+    <Compile Include="Converters\LessThanXToTrueConverter.cs" />
+    <Compile Include="Converters\ScheduleStatusToColourConverter.cs" />
+    <Compile Include="Models\BackupSetScheduleStatus.cs" />
+    <Compile Include="Models\DialogButtonModel.cs" />
+    <Compile Include="Services\DialogService.cs" />
     <Compile Include="Services\Interfaces\IMessageBoxService.cs" />
     <Compile Include="Services\MessageBoxService.cs" />
+    <Compile Include="Services\StateService.cs" />
     <Compile Include="Util\ChangeNotifyingObservableCollection.cs" />
     <Compile Include="ViewModels\AboutViewModel.cs" />
     <Compile Include="ViewModels\ActionLogItemViewModel.cs" />
+    <Compile Include="ViewModels\DialogViewModel.cs" />
+    <Compile Include="ViewModels\DirectoryViewModel3.cs" />
+    <Compile Include="ViewModels\ServiceViewModel.cs" />
     <Compile Include="Views\AboutDialog.xaml.cs">
       <DependentUpon>AboutDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\BackupSetDetailsView.xaml.cs">
+      <DependentUpon>BackupSetDetailsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\BackupSetDialog.xaml.cs">
       <DependentUpon>BackupSetDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\BackupSetEditView.xaml.cs">
+      <DependentUpon>BackupSetEditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\BackupSetsOverviewView.xaml.cs">
+      <DependentUpon>BackupSetsOverviewView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\BackupSetTileView.xaml.cs">
+      <DependentUpon>BackupSetTileView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DialogView.xaml.cs">
+      <DependentUpon>DialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LogView.xaml.cs">
+      <DependentUpon>LogView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ModernWindow1.xaml.cs">
       <DependentUpon>ModernWindow1.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ScheduleView.xaml.cs">
+      <DependentUpon>ScheduleView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ServiceView.xaml.cs">
+      <DependentUpon>ServiceView.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Controls\FlipControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\SafeAndSoundResourceDarkDictionary.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Resources\SafeAndSoundResourceDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -110,7 +160,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\BackupSetDetailsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\BackupSetEditView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\BackupSetsListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\BackupSetsOverviewView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\BackupSetTileView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -122,11 +188,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\DialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\DriveSelectionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ExcludedDirectoriesWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -152,7 +226,7 @@
     <Compile Include="ViewModels\DirectoryViewModel2.cs" />
     <Compile Include="ViewModels\DriveInfoViewModel.cs" />
     <Compile Include="ViewModels\DriveSelectionViewModel.cs" />
-    <Compile Include="ViewModels\ExcludedFilesViewModel.cs" />
+    <Compile Include="ViewModels\ExcludedDirectoriesViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\BackupSetCollectionWindowViewModel.cs" />
     <Compile Include="ViewModels\DirectoryViewModel.cs" />
@@ -186,6 +260,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\ScheduleView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ServiceView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -216,7 +298,7 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\" />
+    <Resource Include="Resources\appbar.settings.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BackupEngine\BackupEngine.csproj">
@@ -240,6 +322,20 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\appbar.dotdotdot.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\SafeAndSound.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\appbar.list.add.below.png" />
+    <Resource Include="Resources\appbar.list.delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\appbar.add.png" />
+    <Resource Include="Resources\appbar.delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\appbar.new.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

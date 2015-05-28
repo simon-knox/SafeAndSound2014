@@ -3,8 +3,11 @@ using Catel.Data;
 using Catel.IoC;
 using Catel.MVVM;
 using Catel.MVVM.Services;
+using FirstFloor.ModernUI.Presentation;
 using SKnoxConsulting.SafeAndSound.BackupEngine;
 using SKnoxConsulting.SafeAndSound.BackupEngine.BackupActions;
+using SKnoxConsulting.SafeAndSound.Gui.Models;
+using SKnoxConsulting.SafeAndSound.Gui.Services;
 using SKnoxConsulting.SafeAndSound.Gui.Util;
 using System;
 using System.Collections.Generic;
@@ -15,6 +18,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Markup;
@@ -26,12 +30,12 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
     {
         private IUIVisualizerService _uiVisualizerService;
         private ChangeNotificationWrapper _totalFileCountChanged;
-        //private ChangeNotifyingObservableCollection<ActionLogItemViewModel> _actionLog2;
         private ICollectionView _actionLog2View;
-        private ChangeNotifyingObservableCollection<ActionLogItemViewModel> _actionLog2;
+        private ObservableCollection<ActionLogItemViewModel> _actionLog2;
         private Timer _timer;
+        private BackupSetScheduleStatus _scheduleStatus;
 
-        public BackupSetViewModel(BackupSet backupSet, IUIVisualizerService uiVisualizerService)
+        public BackupSetViewModel(IBackupSet backupSet, IUIVisualizerService uiVisualizerService)
         {
             Argument.IsNotNull(() => backupSet);
             Argument.IsNotNull(() => uiVisualizerService);
@@ -42,6 +46,8 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
                 RefreshLog();
             }), null, Timeout.Infinite, Timeout.Infinite);
 
+            UpdateScheduleStatus();            
+         
             BrowseSourceCommand = new Command(() => SourceDirectory = SetDirectory(SourceDirectory, "Select Source Directory"));
             BrowseDestinationCommand = new Command(() => DestinationDirectory = SetDirectory(DestinationDirectory, "Select Destination Directory"));
             ExcludeDirectoriesCommand = new Command(OnExcludeDirectoriesExecute, ()=>!String.IsNullOrEmpty(SourceDirectory));
@@ -51,27 +57,42 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
                     {
                         var typeFactory = this.GetTypeFactory();
                         var driveSelectionViewModel = typeFactory.CreateInstanceWithParametersAndAutoCompletion<DriveSelectionViewModel>();
+                        driveSelectionViewModel.SetDefaultDrive(DestinationDirectory.Substring(0, 1));
                         if(_uiVisualizerService.ShowDialog(driveSelectionViewModel) == true )
                         {
                             UpdateDestinationDriveLetter(driveSelectionViewModel.SelectedDrive.Name);
+                        }
+                        else
+                        {
+                            return;
                         }
                         
                     }
                     _timer.Change(1000, 1000);
                     BackupSet.RunBackup();
                 }  
-                , () =>   ProcessingStatus == BackupProcessingStatus.NotStarted ||
-                                                                                ProcessingStatus == BackupProcessingStatus.Cancelled ||
-                                                                                ProcessingStatus == BackupProcessingStatus.Finished);
+                , () => CanRunBackup);
+
             CancelBackupCommand = new Command(() =>
                 {
                     _timer.Change(Timeout.Infinite, Timeout.Infinite);
                     BackupSet.CancelBackup();
                 }
-                , () => ProcessingStatus != BackupProcessingStatus.NotStarted &&
-                                                                                    ProcessingStatus != BackupProcessingStatus.Cancelled &&
-                                                                                    ProcessingStatus != BackupProcessingStatus.Finished);
+                , () => CanCancelBackup);
 
+            EditBackupSetCommand = new RelayCommand((o)=>
+            {
+                StateService.RequestBackupSetEdit((string)o);
+            }
+            ,(o) =>   ProcessingStatus == BackupProcessingStatus.NotStarted ||
+                ProcessingStatus == BackupProcessingStatus.Cancelled ||
+                ProcessingStatus == BackupProcessingStatus.Finished);
+
+            FinishEditingBackupSetCommand = new RelayCommand((o) =>
+            {
+                StateService.RequestBackupSetEdit((string)o);
+            });           
+            
             BackupSet.PropertyChanged += BackupSetPropertyChanged;            
         }
 
@@ -95,7 +116,9 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
                 case "Status":
                 {
                     RaisePropertyChanged(() => ShowBackupRunDetails);
-                    RaisePropertyChanged(() => ActionLog2);                    
+                    RaisePropertyChanged(() => ActionLog2);
+                    RaisePropertyChanged(() => IsProgressBarVisible);
+                    RaisePropertyChanged(() => IsProcessRingVisible);
                     return;
                 }
                 case "ProcessingStatus":
@@ -104,11 +127,13 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
                     {
                         //Task.Factory.StartNew(() =>
                        // {
-                        ActionLog2 = new ChangeNotifyingObservableCollection<ActionLogItemViewModel>(ActionLog.Select(ba => new ActionLogItemViewModel(ba)));
+                        ActionLog2 = new ObservableCollection<ActionLogItemViewModel>(ActionLog.Select(ba => new ActionLogItemViewModel(ba)));
                         ActionLogView = (CollectionView)CollectionViewSource.GetDefaultView(ActionLog2);
                         ActionLogView.Filter = IsToBeShownInLog;
                         ActionLogView.Refresh();
                         RaisePropertyChanged(() => ActionLogView);
+                        RaisePropertyChanged(() => IsProgressBarVisible);
+                        RaisePropertyChanged(() => IsProcessRingVisible);
 
                            // ActionLog2 = new ChangeNotifyingObservableCollection<ActionLogItemViewModel>(ActionLog.Select(ba => new ActionLogItemViewModel(ba)));
                         //})
@@ -119,16 +144,31 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
                     }
                     return;
                 }
+                case "ProcessingProgressCount":
+                {
+                    RaisePropertyChanged(() => ProcessingProgressMessage);
+                    return;
+                }
+                case "LastRunTime":
+                {
+                    UpdateScheduleStatus();
+                    return;
+                }
+                case "ErrorCount":
+                {
+                    UpdateScheduleStatus();
+                    return;
+                }
             }
         }     
             
                     
 
-        public static readonly PropertyData BackupSetProperty = RegisterProperty("BackupSet", typeof(BackupSet), null);
+        public static readonly PropertyData BackupSetProperty = RegisterProperty("BackupSet", typeof(IBackupSet), null);
         [Model]
-        public BackupSet BackupSet
+        public IBackupSet BackupSet
         {
-            get { return GetValue<BackupSet>(BackupSetProperty); }
+            get { return GetValue<IBackupSet>(BackupSetProperty); }
             set { SetValue(BackupSetProperty, value); }
         }
 
@@ -154,9 +194,27 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
         public CollectionView ActionLogView
         { get; private set; }
 
+        public bool CanRunBackup
+        {
+            get
+            {
+                return ProcessingStatus == BackupProcessingStatus.NotStarted ||
+                    ProcessingStatus == BackupProcessingStatus.Cancelled ||
+                    ProcessingStatus == BackupProcessingStatus.Finished;
+            }
+        }
 
+        public bool CanCancelBackup
+        {
+            get
+            {
+                return ProcessingStatus != BackupProcessingStatus.NotStarted &&
+                    ProcessingStatus != BackupProcessingStatus.Cancelled &&
+                    ProcessingStatus != BackupProcessingStatus.Finished;
+            }
+        }
 
-        public ChangeNotifyingObservableCollection<ActionLogItemViewModel> ActionLog2
+        public ObservableCollection<ActionLogItemViewModel> ActionLog2
         {
             get
             {
@@ -330,7 +388,7 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
         {
             get { return GetValue<bool>(IncludeSystemProperty); }
             set { SetValue(IncludeSystemProperty, value); }
-        }
+       } 
 
         public static readonly PropertyData RemoveDeletedProperty = RegisterProperty("RemoveDeleted", typeof(bool), false);
         /// <summary>
@@ -355,8 +413,15 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
             { 
                 SetValue(ProcessingStatusProperty, value);
                 RaisePropertyChanged(() => ShowBackupRunDetails);
+                RaisePropertyChanged(() => IsProcessRingVisible);
+                RaisePropertyChanged(() => IsProgressBarVisible);
+                RaisePropertyChanged(() => CanRunBackup);
+                RaisePropertyChanged(() => CanCancelBackup);
+                RaisePropertyChanged(() => ScheduleStatus);
             }
         }
+
+
 
         public static readonly PropertyData StatusProperty = RegisterProperty("Status", typeof(string));
         /// <summary>
@@ -373,8 +438,60 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
             {
                 SetValue(StatusProperty, value);
                 RaisePropertyChanged(() => ShowBackupRunDetails);
+                RaisePropertyChanged(() => IsProcessRingVisible);
+                RaisePropertyChanged(() => IsProgressBarVisible);
             }
         }
+
+        public static readonly PropertyData BackupFrequencyProperty = RegisterProperty("BackupFrequency", typeof(RunInterval));
+        /// <summary>
+        /// The status of the BackupSet
+        /// </summary>
+        [ViewModelToModel("BackupSet")]
+        public RunInterval BackupFrequency
+        {
+            get
+            {
+                return GetValue<RunInterval>(BackupFrequencyProperty);
+            }            
+            private set 
+            {
+                SetValue(BackupFrequencyProperty, value);
+            }
+        }
+        
+        //public RunInterval SelectedBackupFrequency
+        //{
+        //    get
+        //    {
+        //        switch(BackupFrequency)
+        //        {
+        //            case RunInterval.Daily:
+        //                return "Daily";
+        //            case RunInterval.Hourly:
+        //                return "Hourly";
+        //        }
+        //        return "Custom";
+        //    }
+        //    set
+        //    {
+        //        switch(value)
+        //        {
+        //            case "Daily":
+        //                BackupFrequency = RunInterval.Daily;
+        //                break;
+        //            case "Hourly":
+        //                BackupFrequency = RunInterval.Hourly;
+        //                break;
+        //            default:
+        //                BackupFrequency = RunInterval.Custom;
+        //                break;
+        //        }
+        //    }
+        //}
+
+
+  
 
         [ExcludeFromValidation]
         public bool ShowBackupRunDetails
@@ -413,7 +530,12 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
         public int FolderDeleteCount
         {
             get { return GetValue<int>(FolderDeleteCountProperty); }
-            private set { SetValue(FolderDeleteCountProperty, value); }
+            private set
+            { 
+                SetValue(FolderDeleteCountProperty, value);
+                RaisePropertyChanged(() => ProcessingProgressCount);
+                RaisePropertyChanged(() => ProcessingProgressMessage);
+            }
         }
 
         public static readonly PropertyData FileDeleteCountProperty = RegisterProperty("FileDeleteCount", typeof(int), 0);
@@ -479,7 +601,13 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
         public int ErrorCount
         {
             get { return GetValue<int>(ErrorCountProperty); }
-            private set { SetValue(ErrorCountProperty, value); }
+            private set 
+            {
+                SetValue(ErrorCountProperty, value);
+                if (value > 0)
+                    ScheduleStatus = BackupSetScheduleStatus.LastRunHadErrors;
+            
+            }
         }
 
         public static readonly PropertyData ProcessingProgressCountProperty = RegisterProperty("ProcessingProgressCount", typeof(int), 0);
@@ -489,7 +617,12 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
         [ViewModelToModel("BackupSet")]
         public int ProcessingProgressCount
         {
-            get { return FileCopyCount + FileOverwriteCount + FileSkipCount + ErrorCount; }
+            get { return FolderDeleteCount + FileCopyCount + FileOverwriteCount + FileSkipCount + ErrorCount; }
+        }
+
+        public string ProcessingProgressMessage
+        {
+            get { return string.Format("{0} out of {1}", ProcessingProgressCount, TotalFileCountMaximum); }
         }
 
         public static readonly PropertyData ActionQueueProperty = RegisterProperty("ActionQueue", typeof(Queue<BackupAction>), new Queue<BackupAction>());
@@ -502,6 +635,56 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
             get { return GetValue<Queue<BackupAction>>(ActionQueueProperty); }
             private set { SetValue(ActionQueueProperty, value); }
         }
+
+        public static readonly PropertyData LastRunTimeProperty = RegisterProperty("LastRunTime", typeof(DateTime),new DateTime(1,1,1));
+        /// <summary>
+        /// The queue of BackupActions
+        /// </summary>
+        [ViewModelToModel("BackupSet")]
+        public DateTime LastRunTime
+        {
+            get { return GetValue<DateTime>(LastRunTimeProperty); }
+            private set { SetValue(LastRunTimeProperty, value); }
+        }
+
+        public DateTime DueRunTime
+        {
+            get
+            {
+                if (LastRunTime == DateTime.MinValue)
+                {
+                    return DateTime.MinValue;
+                }
+                switch (BackupFrequency)
+                {
+                    case RunInterval.QuarterHourly:
+                        return LastRunTime.AddMinutes(15);
+                    case RunInterval.HalfHourly:
+                        return LastRunTime.AddMinutes(30);
+                    case RunInterval.Hourly:
+                        return LastRunTime.AddHours(1);
+                    case RunInterval.Daily:
+                        return LastRunTime.AddDays(1);
+                    case RunInterval.Weekly:
+                        return LastRunTime.AddDays(1);
+                    case RunInterval.Monthly:
+                        return LastRunTime.AddMonths(1);
+                }
+                return DateTime.MaxValue;
+            }
+        }
+
+        public BackupSetScheduleStatus ScheduleStatus
+        { 
+            get { return _scheduleStatus;}
+            private set
+            {
+                _scheduleStatus = value;
+                RaisePropertyChanged(() => ScheduleStatus);
+            }
+        }
+
+
 
         public static readonly PropertyData SkipFileActionQueueProperty = RegisterProperty("SkipFileActionQueue", typeof(Queue<BackupAction>), new Queue<BackupAction>());
         /// <summary>
@@ -537,7 +720,7 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
             }
         }
 
-        public static readonly PropertyData ShowCompleteInLogProperty = RegisterProperty("ShowCompleteInLog", typeof(bool),true);
+         public static readonly PropertyData ShowCompleteInLogProperty = RegisterProperty("ShowCompleteInLog", typeof(bool),true);
 
         public bool ShowCompleteInLog
         {
@@ -575,6 +758,16 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
             }
         }   
 
+        public bool IsProgressBarVisible
+        {
+            get { return TotalFileCount > 0; }
+        }
+
+        public bool IsProcessRingVisible
+        {
+            get { return ProcessingStatus == BackupProcessingStatus.BuildingActionQueue; }
+        }
+
         public ICommand BrowseSourceCommand
         { get; private set; }
 
@@ -590,25 +783,30 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
         public ICommand CancelBackupCommand
         { get; private set; }
 
+        public ICommand EditBackupSetCommand
+        { get; private set; }
+
+        public ICommand FinishEditingBackupSetCommand
+        { get; private set; }
+
         /// <summary>
         /// Method to invoke when the AddBackupSet command is executed.
         /// </summary>
         private void OnExcludeDirectoriesExecute()
         {
-            //ExcludedDirectories
             //// Note that we use the type factory here because it will automatically take care of any dependencies
             //// that the BackupSetViewModel will add in the future
             var typeFactory = this.GetTypeFactory();
-            var excludedFilesViewModel = typeFactory.CreateInstanceWithParametersAndAutoCompletion<ExcludedFilesViewModel>(BackupSet);
+            var excludedFilesViewModel = typeFactory.CreateInstanceWithParametersAndAutoCompletion<ExcludedDirectoriesViewModel>(BackupSet);
 
             if (_uiVisualizerService.ShowDialog(excludedFilesViewModel) ?? false)
             {
-                var v = excludedFilesViewModel.Items[0].GetExcludedDirectories();
-
-
-                int h = 7;//BackupSets.Add(BackupSet);
+                ExcludedDirectories.Clear();
+                foreach(var ed in excludedFilesViewModel.GetExcludedDirectories(excludedFilesViewModel.Items[0]))//..ExcludedDirectories;
+                {
+                    ExcludedDirectories.Add(ed.FullPath);
+                }
             }       
-            int i = 0;
         }
 
         private string SetDirectory(string directory, string title="Select Directory")
@@ -634,8 +832,28 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
             {
                 DestinationDirectory = driveName.Substring(0,1) +  DestinationDirectory.Substring(DestinationDirectory.IndexOf(':'));
             }
-        }
+        }       
 
+        private void UpdateScheduleStatus()
+        {
+            if(ErrorCount > 0)
+            {
+                ScheduleStatus = BackupSetScheduleStatus.LastRunHadErrors;
+                return;
+            }
+            if(LastRunTime == DateTime.MinValue)
+            {
+                ScheduleStatus = BackupSetScheduleStatus.NeverRun;
+            }
+            else if(DueRunTime < DateTime.Now)
+            {
+                ScheduleStatus = BackupSetScheduleStatus.Overdue;
+            }
+            else
+            {                
+                ScheduleStatus = BackupSetScheduleStatus.UpToDate;
+            }
+        }
        
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;

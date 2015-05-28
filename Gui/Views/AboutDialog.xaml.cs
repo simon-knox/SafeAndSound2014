@@ -1,4 +1,5 @@
 ﻿using FirstFloor.ModernUI.Windows.Controls;
+using SKnoxConsulting.SafeAndSound.Gui.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,13 +20,13 @@ namespace SKnoxConsulting.SafeAndSound.Gui.Views
     /// <summary>
     /// Interaction logic for AboutDialog.xaml
     /// </summary>
-    public partial class AboutDialog : ModernDialog
+    public partial class AboutDialog : SafeAndSoundDialog
     {
         public AboutDialog()
         {
             InitializeComponent();
             // define the dialog buttons
-            this.Buttons = new Button[] { this.OkButton };
+            Buttons = new Button[] { OkButton };
         }        
     }
 }

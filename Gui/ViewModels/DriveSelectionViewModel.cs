@@ -59,5 +59,10 @@ using System.IO;
             get;
             set;
         }
+
+        public void SetDefaultDrive(string driveLetter)
+        {
+            SelectedDrive = Drives.Where(d => d.Name.StartsWith(driveLetter)).FirstOrDefault();
+        }
     }
 }

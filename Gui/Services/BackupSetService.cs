@@ -22,7 +22,7 @@ namespace SKnoxConsulting.SafeAndSound.Gui.Services
             _path = Path.Combine(directory, "backupSets.xml");
         }
  
-        public IEnumerable<BackupSet> LoadBackupSets()
+        public IEnumerable<IBackupSet> LoadBackupSets()
         {
             if (!File.Exists(_path))
             {
@@ -34,7 +34,7 @@ namespace SKnoxConsulting.SafeAndSound.Gui.Services
             return result.BackupSets.OrderBy(bs=>bs.Name);
         }
  
-        public void SaveBackupSets(IEnumerable<BackupSet> backupSets)
+        public void SaveBackupSets(IEnumerable<IBackupSet> backupSets)
         {
             var backupSetCollection = new BackupSetCollection();
             backupSetCollection.BackupSets.ReplaceRange(backupSets);

@@ -19,43 +19,43 @@
     <Color x:Key="HotColor">#525252</Color>
     
     <!--Brushes-->
-    <SolidColorBrush x:Key="ForegroundBrush" Color="{StaticResource ForegroundColor}"/>
-    <SolidColorBrush x:Key="MouseOverForegroundBrush" Color="{StaticResource DarkBackgroundColor}"/>
-    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="{StaticResource WindowBackgroundColor}"/>
+    <SolidColorBrush x:Key="ForegroundBrush" Color="{DynamicResource ForegroundColor}"/>
+    <SolidColorBrush x:Key="MouseOverForegroundBrush" Color="{DynamicResource DarkBackgroundColor}"/>
+    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="{DynamicResource WindowBackgroundColor}"/>
 
-    <SolidColorBrush x:Key="TabControlNormalBorderBrush" Color="{StaticResource WindowBackgroundColor}"/>
+    <SolidColorBrush x:Key="TabControlNormalBorderBrush" Color="{DynamicResource WindowBackgroundColor}"/>
 
-    <SolidColorBrush x:Key="TabItemHotBackground" Color="{StaticResource HotColor}"/>
-    <SolidColorBrush x:Key="TabItemSelectedBackground" Color="{StaticResource LightBackgroundColor}"/>
-    <SolidColorBrush x:Key="TabItemHotBorderBrush" Color="{StaticResource HotColor}"/>
-    <SolidColorBrush x:Key="TabItemDisabledBackground" Color="{StaticResource DarkBackgroundColor}"/>
-    <SolidColorBrush x:Key="TabItemDisabledBorderBrush" Color="{StaticResource DarkBackgroundColor}"/>
+    <SolidColorBrush x:Key="TabItemHotBackground" Color="{DynamicResource HotColor}"/>
+    <SolidColorBrush x:Key="TabItemSelectedBackground" Color="{DynamicResource LightBackgroundColor}"/>
+    <SolidColorBrush x:Key="TabItemHotBorderBrush" Color="{DynamicResource HotColor}"/>
+    <SolidColorBrush x:Key="TabItemDisabledBackground" Color="{DynamicResource DarkBackgroundColor}"/>
+    <SolidColorBrush x:Key="TabItemDisabledBorderBrush" Color="{DynamicResource DarkBackgroundColor}"/>
 
-    <SolidColorBrush x:Key="ScrollViewerBackground" Color="{StaticResource DarkBackgroundColor}" />
-    <SolidColorBrush x:Key="VerticalScrollBarBackground" Color="{StaticResource BackgroundColor}"/>
-    <SolidColorBrush x:Key="HorizontalScrollBarBackground" Color="{StaticResource BackgroundColor}" />
+    <SolidColorBrush x:Key="ScrollViewerBackground" Color="{DynamicResource DarkBackgroundColor}" />
+    <SolidColorBrush x:Key="VerticalScrollBarBackground" Color="{DynamicResource BackgroundColor}"/>
+    <SolidColorBrush x:Key="HorizontalScrollBarBackground" Color="{DynamicResource BackgroundColor}" />
     <SolidColorBrush x:Key="VerticalScrollBarThumb" Color="#808080"/>
-    <SolidColorBrush x:Key="ScrollBarDisabledBackground" Color="{StaticResource BackgroundColor}"/>
+    <SolidColorBrush x:Key="ScrollBarDisabledBackground" Color="{DynamicResource BackgroundColor}"/>
     <SolidColorBrush x:Key="ScrollBarHotThumb" Color="#CCCCCC"/>
     <SolidColorBrush x:Key="ScrollBarSelectedThumb" Color="#E5E5E5"/>
-    <SolidColorBrush x:Key="CornerBorder" Color="{StaticResource DarkBackgroundColor}"/>
+    <SolidColorBrush x:Key="CornerBorder" Color="{DynamicResource DarkBackgroundColor}"/>
 
-    <SolidColorBrush x:Key="TextBoxBorder" Color="{StaticResource DarkBackgroundColor}" />
-    <SolidColorBrush x:Key="TextBoxBackground" Color="{StaticResource DarkBackgroundColor}" />
+    <SolidColorBrush x:Key="TextBoxBorder" Color="{DynamicResource DarkBackgroundColor}" />
+    <SolidColorBrush x:Key="TextBoxBackground" Color="{DynamicResource DarkBackgroundColor}" />
     <SolidColorBrush x:Key="TextBoxDisabledForeground" Color="#8C8C8C" />
-    <SolidColorBrush x:Key="TextBoxDisabledBackground" Color="{StaticResource DisabledBackgroundColor}" />
+    <SolidColorBrush x:Key="TextBoxDisabledBackground" Color="{DynamicResource DisabledBackgroundColor}" />
     <SolidColorBrush x:Key="InactiveSelectionHighlightBrush" Color="#335C85"/>
 
     <SolidColorBrush x:Key="ComboBoxButtonNormalBackground" Color="#808080"/>
 
-    <SolidColorBrush x:Key="ButtonNormalBackground" Color="{StaticResource DarkBackgroundColor}"/>
+    <SolidColorBrush x:Key="ButtonNormalBackground" Color="{DynamicResource DarkBackgroundColor}"/>
     <SolidColorBrush x:Key="ButtonNormalBorder" Color="#4C4C4C"/>
 
-    <SolidColorBrush x:Key="ButtonForeground" Color="{StaticResource ForegroundColor}"/>
+    <SolidColorBrush x:Key="ButtonForeground" Color="{DynamicResource ForegroundColor}"/>
     <SolidColorBrush x:Key="MouseOverButtonForeground" Color="#1B1B1B"/>
-    <SolidColorBrush x:Key="ButtonBackground" Color="{StaticResource LightBackgroundColor}"/>
-    <SolidColorBrush x:Key="ButtonBorder" Color="{StaticResource DarkBackgroundColor}"/>
-    <SolidColorBrush x:Key="PressedButtonBackground" Color="{StaticResource DisabledBackgroundColor}"/>
+    <SolidColorBrush x:Key="ButtonBackground" Color="{DynamicResource LightBackgroundColor}"/>
+    <SolidColorBrush x:Key="ButtonBorder" Color="{DynamicResource DarkBackgroundColor}"/>
+    <SolidColorBrush x:Key="PressedButtonBackground" Color="{DynamicResource DisabledBackgroundColor}"/>
     <SolidColorBrush x:Key="MouseOverButtonBackground" Color="#AAAAAA"/>
     <SolidColorBrush x:Key="DisabledButtonBackground" Color="{StaticResource LightDisabledBackgroundColor}"/>
     <SolidColorBrush x:Key="DisabledButtonForeground" Color="{StaticResource DisabledBackgroundColor}"/>

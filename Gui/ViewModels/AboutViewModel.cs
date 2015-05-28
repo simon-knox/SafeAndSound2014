@@ -15,7 +15,7 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
         {
             get 
             {
-                return "Safe and Sound 2014";
+                return "Safe and Sound 2015";
             }
         }
 

@@ -49,6 +49,22 @@ namespace SKnoxConsulting.SafeAndSound.Gui.ViewModels
             }
         }
 
+        private bool _isExpanded;
+
+        public bool IsExpanded
+        {
+            get
+            {
+                return _isExpanded;
+            }
+            set
+            {
+                _isExpanded = value;
+                RaisePropertyChanged(() => IsExpanded);
+            }
+
+        }
+
         public void SetSubDirectoriesInclude(bool include)
         {
             foreach(var sd in SubDirectories)

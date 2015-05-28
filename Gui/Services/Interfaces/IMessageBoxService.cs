@@ -10,5 +10,7 @@ namespace SKnoxConsulting.SafeAndSound.Gui.Services.Interfaces
     public interface IMessageBoxService
     {
         MessageBoxResult ShowMessage(string message, string title, MessageBoxButton button);
+
+        //void ShowDialog()
     }
 }

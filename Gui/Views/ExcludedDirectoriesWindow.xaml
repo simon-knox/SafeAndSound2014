@@ -1,36 +1,59 @@
-﻿<mui:ModernDialog x:Class="SKnoxConsulting.SafeAndSound.Gui.Views.ExcludedDirectoriesWindow"
+﻿<mahApps:MetroWindow x:Class="SKnoxConsulting.SafeAndSound.Gui.Views.ExcludedDirectoriesWindow"
                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                   xmlns:io="clr-namespace:System.IO;assembly=mscorlib"
                   xmlns:be="clr-namespace:SKnoxConsulting.SafeAndSound.BackupEngine"
                   xmlns:vm="clr-namespace:SKnoxConsulting.SafeAndSound.Gui.ViewModels"
                   xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+                  xmlns:mahApps="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                      
 				  xmlns:catel="http://catel.codeplex.com"
+                  GlowBrush="{DynamicResource AccentColorBrush}"
+                  Loaded="OnLoaded"
+                  Unloaded="OnUnloaded"
+                     
                   Title="Sub Folder Selection">
     
     <!-- Resources -->
-    <mui:ModernDialog.Resources>
+    <mahApps:MetroWindow.Resources>
         <ResourceDictionary>
-            <HierarchicalDataTemplate DataType="{x:Type vm:DirectoryViewModel}"
+            <HierarchicalDataTemplate  x:Key="FolderCheckboxTemplate" DataType="{x:Type vm:DirectoryViewModel3}"
                                   ItemsSource="{Binding SubDirectories}">
-                <CheckBox IsChecked="{Binding Include}" Content="{Binding Path=Name}" ToolTip="{Binding Path=FullPath}" />
+                <CheckBox IsChecked="{Binding Include}" Content="{Binding Path=Name, FallbackValue=NAME}" ToolTip="{Binding Path=FullPath}" />
             </HierarchicalDataTemplate>
+
+            <!--<HierarchicalDataTemplate DataType="{x:Type vm:DirectoryViewModel3}"
+                                 >
+            <CheckBox IsChecked="{Binding Include}" Content="{Binding Path=Name, FallbackValue=NAME}" ToolTip="{Binding Path=FullPath}" />
+            </HierarchicalDataTemplate>-->
         </ResourceDictionary>
-    </mui:ModernDialog.Resources>
+    </mahApps:MetroWindow.Resources>
 
     <!-- Content -->       
         <catel:StackGrid>
            <catel:StackGrid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
+               <RowDefinition Height="Auto" />
+               <RowDefinition Height="Auto" />
+               <RowDefinition Height="Auto" />
             </catel:StackGrid.RowDefinitions>
             <catel:StackGrid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
             </catel:StackGrid.ColumnDefinitions>
 
             <Label Margin="11,11,0,0" Content="Select folders to include in the backup set"/>
+        <!--<DockPanel Height="400" Width="400" Visibility="{Binding ProcessingDirectories, Mode=OneWay, Converter={StaticResource BoolToCollapsingVisibilityConverter}}">
+            
+        
+        <mui:ModernProgressRing Height="100" Width="100" HorizontalAlignment="Center" VerticalAlignment="Center" IsActive="{Binding ProcessingDirectories}"/>
+        </DockPanel>-->
+<!--ItemsSource="{Binding Path=Items}"-->
+        <TreeView x:Name="tvFolders"  Height="400" Width="400"/>
+        <StackPanel Orientation="Horizontal">
+            <Button>OK</Button>
+            <Button>Cancel</Button>
+        </StackPanel>
 
-            <TreeView VirtualizingStackPanel.IsVirtualizing="True" ItemsSource="{Binding Path=Items}" Height="400" Width="400"/>
+
 
     </catel:StackGrid>
-</mui:ModernDialog>
+</mahApps:MetroWindow>

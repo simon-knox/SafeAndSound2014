@@ -7,18 +7,27 @@
     <Application.Resources>
 	
         <!-- Generic Catel theme -->
-        <ResourceDictionary Source="/Catel.Extensions.Controls;component/themes/generic.xaml">
+        <ResourceDictionary>
+
+        <!--<ResourceDictionary Source="/Catel.Extensions.Controls;component/themes/generic.xaml">-->
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/FirstFloor.ModernUI;component/Assets/ModernUI.xaml" />
-                <ResourceDictionary Source="/FirstFloor.ModernUI;component/Assets/ModernUI.Light.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml"/>
+
+                <!--<ResourceDictionary Source="/FirstFloor.ModernUI;component/Assets/ModernUI.xaml" />
+                <ResourceDictionary Source="/FirstFloor.ModernUI;component/Assets/ModernUI.Light.xaml"/>-->
                 <!--<ResourceDictionary Source="/Catel.Extensions.Controls;component/themes/generic.xaml"/>-->
                 <ResourceDictionary Source="/Resources/SafeAndSoundResourceDictionary.xaml"/>
                 <!--<<ResourceDictionary Source="Styles.xaml" />-->
-                
+
             </ResourceDictionary.MergedDictionaries>
-                
-            </ResourceDictionary>
-        
-		
+
+        </ResourceDictionary>
+
+
     </Application.Resources>
 </Application>

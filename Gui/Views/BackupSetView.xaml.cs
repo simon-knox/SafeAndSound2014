@@ -1,6 +1,7 @@
 ﻿namespace SKnoxConsulting.SafeAndSound.Gui.Views
 {
     using Catel.Windows.Controls;
+    using SKnoxConsulting.SafeAndSound.Gui.Services;
     using SKnoxConsulting.SafeAndSound.Gui.ViewModels;
 
     /// <summary>
@@ -14,6 +15,11 @@
         public BackupSetView()
         {
             InitializeComponent();
+        }
+
+        private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            StateService.RequestBackupSetEdit(this.fc.Id);
         }
     }
 }

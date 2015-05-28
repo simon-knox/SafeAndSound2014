@@ -1,4 +1,5 @@
-﻿namespace SKnoxConsulting.SafeAndSound.BackupEngine
+﻿using System.ComponentModel;
+namespace SKnoxConsulting.SafeAndSound.BackupEngine
 {
     ///<summary>
     /// The type of file change
@@ -65,17 +66,32 @@
         Restore
     } ;
 
-    /// <summary>
-    /// The frequency of the BackupSchedule
-    /// </summary>
-    public enum BackupScheduleFrequency
+    ///// <summary>
+    ///// The frequency of the BackupSchedule
+    ///// </summary>
+    //public enum BackupScheduleFrequency
+    //{
+    //    Manual,
+    //    Hourly,
+    //    Daily,
+    //    Weekly,
+    //    Monthly
+    //} ;
+
+    public enum RunInterval
     {
-        Manual,
+        [Description("1/4 Hourly")]
+        QuarterHourly,
+        [Description("1/2 Hourly")]
+        HalfHourly,
         Hourly,
         Daily,
         Weekly,
-        Monthly
-    } ;
+        Monthly,
+        Custom,
+        [Description("Manual Only")]
+        ManualOnly
+    }
 
     public enum StatusCodes
     {
